@@ -936,7 +936,7 @@ input[type="radio"] {
 .sidenav a:hover {
     color: #ffffff;
     /* Blanco al pasar el ratón */
-    background-color: rgba(255, 215, 0, 0.1);
+    background-color: var(--midnight-abyss-light);
     /* Resaltado sutil */
 }
 
@@ -988,30 +988,6 @@ input[type="radio"] {
     opacity: 1;
 }
 
-
-/* --- Media Queries para Responsividad --- */
-@media (max-width: 768px) {
-
-    /* Oculta texto en login/user en pantallas pequeñas si quieres */
-    /* Oculta texto en login/user en pantallas pequeñas si quieres */
-    /* .login-text,
-    .user-name {
-        display: none;
-    } */
-
-    /* Ajusta el min-width si causa problemas */
-    /* header .d-flex li {
-        min-width: auto !important;
-    }
-
-    header .d-flex li.justify-content-end {
-        justify-content: flex-end !important;
-    }
-
-    header .d-flex li.justify-content-start {
-        justify-content: flex-start !important;
-    } */
-}
 
 @media (max-width: 480px) {
 

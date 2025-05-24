@@ -91,16 +91,13 @@
         // Función para abrir Sidenav
         function openNav() {
             mySidenav.classList.add('open');
-            overlay.classList.add('show'); // Muestra el overlay
-            // Opcional: Evita scroll del body cuando el menú está abierto
-            // document.body.style.overflow = 'hidden';
+            overlay.classList.add('show'); 
         }
 
         // Función para cerrar Sidenav
         function closeNav() {
             mySidenav.classList.remove('open');
-            overlay.classList.remove('show'); // Oculta el overlay
-            // document.body.style.overflow = 'auto';
+            overlay.classList.remove('show'); 
         }
 
         // Event Listener para el botón de hamburguesa

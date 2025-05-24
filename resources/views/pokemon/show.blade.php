@@ -281,12 +281,5 @@
             </div>
         </div>
     </div>
-
-    <!-- Back Button -->
-    <div class="text-center mt-5">
-        <a href="/pokedex" class="btn btn-danger btn-lg px-4 py-2">
-            &larr; Volver a la Pokédex
-        </a>
-    </div>
 </div>
 @endsection
