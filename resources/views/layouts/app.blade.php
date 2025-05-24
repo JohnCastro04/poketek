@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,10 +15,11 @@
 
     <!-- Scripts y estilos -->
     @vite(['resources/js/app.js'])
-    
+
     @stack('styles')
     @stack('scripts-head')
 </head>
+
 <body>
     @include('layouts.header')
 
@@ -27,8 +29,15 @@
             @yield('content')
         </main>
     </div>
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" id="closeSidenav">&times;</a>
+        <a href="{{ route('pokedex.index') }}">PokéDex</a>
+        <a href="#">Juegos</a>
+        {{-- Puedes añadir más enlaces aquí si lo necesitas --}}
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
 </body>
+
 </html>

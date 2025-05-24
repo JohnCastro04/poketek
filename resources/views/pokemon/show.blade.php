@@ -15,6 +15,44 @@
                     bar.style.animation = `loadStat 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) ${index * 0.1}s forwards`;
                 }, 100);
             });
+
+            // Alternar entre imagen normal y shiny al hacer click, con animación
+            const pokeImg = document.querySelector('.pokemon-image');
+            if (pokeImg) {
+                let isShiny = false;
+                const normalUrl = pokeImg.src;
+                const match = normalUrl.match(/\/(\d+)\.png$/);
+                const pokeNum = match ? match[1] : null;
+                const shinyUrl = pokeNum
+                    ? normalUrl.replace('/official-artwork/', '/official-artwork/shiny/')
+                    : normalUrl;
+
+                pokeImg.style.cursor = 'pointer';
+                pokeImg.title = 'Haz clic para ver la versión shiny';
+
+                pokeImg.addEventListener('click', function() {
+                    isShiny = !isShiny;
+                    // Animación de desvanecimiento
+                    pokeImg.style.transition = 'opacity 0.25s';
+                    pokeImg.style.opacity = '0';
+                    setTimeout(() => {
+                        pokeImg.src = isShiny ? shinyUrl : normalUrl;
+                        pokeImg.title = isShiny
+                            ? 'Haz clic para ver la versión normal'
+                            : 'Haz clic para ver la versión shiny';
+                    }, 220);
+                });
+
+                // Cuando la imagen termine de cargar, aplica animación de pop y aparece
+                pokeImg.addEventListener('load', function() {
+                    pokeImg.style.transition = 'none';
+                    pokeImg.style.opacity = '1';
+                    pokeImg.style.animation = 'pokemon-pop 0.6s cubic-bezier(0.22, 0.61, 0.36, 1)';
+                    setTimeout(() => {
+                        pokeImg.style.animation = '';
+                    }, 600);
+                });
+            }
         });
 
         // Habilidades: selección y descripción
@@ -43,6 +81,32 @@
             }
         });
     </script>
+@endpush
+
+@push('styles')
+    <style>
+        @keyframes pokemon-pop {
+            0% {
+                opacity: 0;
+                transform: scale(0.7) rotate(-8deg);
+                filter: blur(2px);
+            }
+            60% {
+                opacity: 1;
+                transform: scale(1.08) rotate(2deg);
+                filter: blur(0.5px);
+            }
+            80% {
+                transform: scale(0.96) rotate(-1deg);
+                filter: blur(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+                filter: blur(0);
+            }
+        }
+    </style>
 @endpush
 
 @section('content')

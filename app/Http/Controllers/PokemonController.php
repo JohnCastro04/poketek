@@ -7,42 +7,55 @@ use App\Models\Pokemon;
 
 class PokemonController extends Controller
 {
-    const PER_PAGE = 18;
+    public const PER_PAGE = 24; // Definimos la cantidad de Pokémon por página
 
     public function pokedex(Request $request)
     {
-        $currentPage = max(1, (int) $request->input('page', 1));
-        $perPage = self::PER_PAGE;
-
-        $type = $request->input('type', 'all');
-        $eggGroup = $request->input('egg_group', 'all');
-
         $query = Pokemon::query();
 
-        // Aplicar filtro por tipo
+        // Aplicar filtros
+        $type = $request->input('type', 'all');
+        $eggGroup = $request->input('egg_group', 'all');
+        $searchTerm = $request->input('query', '');
+
         if ($type !== 'all' && !empty($type)) {
+            // Asegúrate de que el formato en la base de datos coincida
+            // Si 'types' es un JSON array de strings, esto funciona
             $query->whereJsonContains('types', $type);
         }
 
-        // Aplicar filtro por grupo huevo
         if ($eggGroup !== 'all' && !empty($eggGroup)) {
+            // Asegúrate de que el formato en la base de datos coincida
+            // Si 'egg_groups' es un JSON array de strings, esto funciona
             $query->whereJsonContains('egg_groups', $eggGroup);
         }
 
-        $total = $query->count();
+        if (!empty($searchTerm)) {
+            $query->where(function($q) use ($searchTerm) {
+                // Si es un número, busca por ID
+                if (is_numeric($searchTerm)) {
+                    $q->orWhere('pokeapi_id', (int) $searchTerm);
+                }
+                // Busca por nombre (case-insensitive)
+                $q->orWhereRaw('LOWER(name) LIKE ?', ["%".strtolower($searchTerm)."%"]);
+            });
+        }
 
-        $pokemons = $query->orderBy('pokeapi_id')
-            ->skip(($currentPage - 1) * $perPage)
-            ->take($perPage)
-            ->get();
+        // Importante: Aplica el filtro pokeapi_id <= 1025 antes de paginar si quieres excluir los de más allá.
+        // Si el campo pokeapi_id es 'id' en tu modelo, cámbialo.
+        $query->where('pokeapi_id', '<=', 1025);
+
+
+        // ¡Aquí está la magia de la paginación de Laravel!
+        // Ordena y luego pagina los resultados.
+        $pokemons = $query->orderBy('pokeapi_id')->paginate(self::PER_PAGE)->withQueryString();
 
         return view('pokedex', [
-            'pokemons' => $pokemons,
-            'currentPage' => $currentPage,
-            'totalPages' => ceil($total / $perPage),
+            'pokemons' => $pokemons, // Cambiamos el nombre de la variable a 'pokemons' para mayor claridad
             'filters' => [
                 'type' => $type,
                 'egg_group' => $eggGroup,
+                'query' => $searchTerm,
             ],
         ]);
     }
@@ -93,7 +106,7 @@ class PokemonController extends Controller
                 'name_es' => $name_es ?? ucfirst(str_replace('-', ' ', $abilityName)),
                 'description' => $desc,
             ];
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             return [
                 'name' => $abilityName,
                 'name_es' => ucfirst(str_replace('-', ' ', $abilityName)),
@@ -171,8 +184,10 @@ class PokemonController extends Controller
                 $q->orWhereRaw('LOWER(name) LIKE ?', ["%$term%"]);
             });
         }
+        
+        $query->where('pokeapi_id', '<=', 1025); // Aplicar filtro de ID también aquí
 
-        $results = $query->orderBy('pokeapi_id')->limit(100)->get();
+        $results = $query->orderBy('pokeapi_id')->limit(100)->get(); // Limite si es para sugerencias
 
         return response()->json([
             'success' => true,
@@ -180,8 +195,6 @@ class PokemonController extends Controller
             'count' => $results->count(),
         ]);
     }
-
-
 
     private function findPokemon($id)
     {
