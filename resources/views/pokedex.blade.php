@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Pokétek - Pokédex Nacional')
+@section('title', config('app.name') . ' - Pokédex Nacional')
 
 @push('scripts')
     <script src="{{ asset('js/pokedex-scripts.js') }}" defer></script>

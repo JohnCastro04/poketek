@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Pokétek - Descubre el Mundo Pokémon')
+@section('title', 'Poketek - Inicio')
 
 @section('content')
     <section class="header-section text-center">
