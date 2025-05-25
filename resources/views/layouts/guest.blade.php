@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,10 +19,12 @@
     @stack('styles')
     @stack('scripts-head')
 </head>
+
 <body style="background: var(--midnight-abyss); min-height: 100vh;">
     @include('layouts.header')
 
-    <div class="min-h-screen d-flex align-items-center justify-content-center" style="background: var(--midnight-abyss);">
+    <div class="min-h-screen d-flex align-items-center justify-content-center"
+        style="background: var(--midnight-abyss);">
         <main class="w-100 h-100 py-5">
             <div class="container pokemon-detail-container">
                 <div class="row justify-content-center">
@@ -35,7 +38,15 @@
         </main>
     </div>
 
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" id="closeSidenav">&times;</a>
+        <a href="{{ route('home') }}">Inicio</a>
+        <a href="{{ route('pokedex.index') }}">PokéDex</a>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
+    @include('layouts.footer')
 </body>
+
 </html>

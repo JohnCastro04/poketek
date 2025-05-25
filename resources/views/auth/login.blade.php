@@ -30,29 +30,22 @@
             {{-- Remember Me --}}
             <div class="block mt-4 mb-4"> {{-- Añadido mb-4 para consistencia con el formulario de registro --}}
                 <label for="remember_me" class="inline-flex items-center">
-                    <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                    <span class="ms-2 text-sm text-white">{{ __('Recordarme') }}</span>
+                    <input id="remember_me" type="checkbox" name="remember">
+                    <span >{{ __('Recordarme') }}</span>
                 </label>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center mt-4"> {{-- Usando d-flex y justify-content-between --}}
-                {{-- Forgot Password Link --}}
-                @if (Route::has('password.request'))
-                    <a class="text-decoration-none text-golden-bloom small" href="{{ route('password.request') }}"> {{-- Adaptado para consistencia --}}
-                        {{ __('¿Olvidaste tu contraseña?') }}
-                    </a>
-                @endif
-
+            <div class="d-flex justify-content-end align-items-center mt-4"> {{-- Usando d-flex y justify-content-between --}}
                 {{-- Login Button --}}
-                <x-primary-button class="btn btn-primary px-4 py-2"> {{-- Adaptado para consistencia --}}
+                <button type="submit" class="btn btn-primary px-4 py-2"> {{-- Botón normal --}}
                     {{ __('Iniciar Sesión') }}
-                </x-primary-button>
+                </button>
             </div>
 
             <div class="flex items-center justify-center mt-4">
                 {{-- Register Link --}}
                 @if (Route::has('register'))
-                    <a class="text-sm text-golden-bloom hover:text-golden-bloom-light underline focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-golden-bloom" href="{{ route('register') }}">
+                    <a class="d-block text-center" href="{{ route('register') }}">
                         {{ __('¿No tienes una cuenta? Regístrate') }}
                     </a>
                 @endif
