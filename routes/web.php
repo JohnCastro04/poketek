@@ -17,7 +17,12 @@ Route::get('/', function () {
 // Pokédex
 Route::get('/pokedex', [PokemonController::class, 'pokedex'])->name('pokedex.index');
 
-// Detalle de Pokémon
+// Página de Pokémon aleatorio (debe ir ANTES de la ruta dinámica)
+Route::get('/pokemon/random', function () {
+    return view('pokemon.random');
+})->name('pokemon.random');
+
+// Detalle de Pokémon (debe ir después)
 Route::get('/pokemon/{nameOrId}', [PokemonController::class, 'showPokemon'])
      ->name('pokemon.show')
      ->where('nameOrId', '[a-zA-Z\-]+|\d+');
@@ -40,6 +45,59 @@ Route::prefix('api')->group(function () {
 
     // Buscar Pokémon
     Route::get('/pokemon/buscar', [PokemonController::class, 'buscar'])->name('pokemon.buscar');
+
+    // API: Pokémon aleatorio con filtros y cantidad
+    Route::get('/random-pokemon', function (\Illuminate\Http\Request $request) {
+        $type = $request->input('type', 'all');
+        $eggGroup = $request->input('egg_group', 'all');
+        $qty = max(1, min((int)$request->input('qty', 1), 6)); // Solo permite de 1 a 6
+
+        $query = \App\Models\Pokemon::query()->where('pokeapi_id', '<=', 1025);
+
+        if ($type !== 'all' && !empty($type)) {
+            $query->whereJsonContains('types', $type);
+        }
+        if ($eggGroup !== 'all' && !empty($eggGroup)) {
+            $query->whereJsonContains('egg_groups', $eggGroup);
+        }
+
+        $count = $query->count();
+        if ($count === 0) {
+            return response()->json(['success' => false, 'message' => 'No hay Pokémon con esos filtros']);
+        }
+
+        // Obtener IDs aleatorios únicos
+        $offsets = [];
+        if ($qty >= $count) {
+            $offsets = range(0, $count - 1);
+            shuffle($offsets);
+            $offsets = array_slice($offsets, 0, $qty);
+        } else {
+            while (count($offsets) < $qty) {
+                $rand = rand(0, $count - 1);
+                if (!in_array($rand, $offsets)) $offsets[] = $rand;
+            }
+        }
+
+        $pokemons = [];
+        foreach ($offsets as $offset) {
+            $pokemon = (clone $query)->skip($offset)->first();
+            if ($pokemon) {
+                $pokemons[] = [
+                    'id' => $pokemon->pokeapi_id,
+                    'display_name' => ucwords(str_replace('-', ' ', $pokemon->name)),
+                    'image' => $pokemon->image,
+                    'types' => $pokemon->types,
+                    'description' => $pokemon->description,
+                ];
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $pokemons,
+        ]);
+    });
 });
 
 // Rutas de autenticación

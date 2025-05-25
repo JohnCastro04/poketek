@@ -1,0 +1,135 @@
+/* === CONTENEDOR PRINCIPAL DE LAS TARJETAS === */
+.random-pokemon-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+    width: 90%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 0;
+    opacity: 0;
+    transform: scale(0.98);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Activación visual (por JS con .random) */
+.random.random-pokemon-row {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* === TARJETAS INDIVIDUALES === */
+.random-pokemon-card {
+    flex: 0 1 calc(16.666% - 1.5rem);
+    max-width: 220px;
+    min-width: 200px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 12px;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(-50px);
+    animation: fadeInFromLeft 0.5s ease-out forwards;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.random-pokemon-card:hover {
+    box-shadow: 0 0 0 4px var(--golden-bloom), 0 12px 32px 0 rgba(242, 197, 114, 0.25);
+    transform: translateY(-6px) scale(1.05);
+    border-color: var(--golden-bloom);
+    z-index: 2;
+}
+
+/* === CONTENEDOR DE LA IMAGEN === */
+.random-pokemon-card .pokemon-img-container {
+    min-height: 140px;
+    padding: 1rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.random-pokemon-card img.pokemon-image {
+    max-height: 120px;
+    width: auto;
+}
+
+/* === ANIMACIÓN DE ENTRADA === */
+@keyframes fadeInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1400px) {
+    .random-pokemon-card {
+        flex: 0 1 calc(16.666% - 1.5rem);
+        max-width: 220px;
+        min-width: 190px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .random-pokemon-card {
+        flex: 0 1 calc(25% - 1.5rem);
+        max-width: 280px;
+        min-width: 240px;
+    }
+}
+
+@media (max-width: 992px) {
+    .random-pokemon-card {
+        flex: 1 1 calc(33.333% - 1.5rem);
+        max-width: 320px;
+        min-width: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    .random-pokemon-card {
+        flex: 1 1 calc(50% - 1.5rem);
+        max-width: 380px;
+        min-width: 320px;
+    }
+}
+
+@media (max-width: 576px) {
+    .random-pokemon-card {
+        flex: 1 1 90%;
+        max-width: 420px;
+        min-width: 350px;
+    }
+    .random-pokemon-row {
+        gap: 1rem;
+        width: 95%;
+    }
+}
+
+/* === ESTILOS INTERNOS DE LAS TARJETAS RANDOM === */
+.random .random-pokemon-card .card-body h3 {
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+}
+
+.random .random-pokemon-card .card-body .badge,
+.random .random-pokemon-card .card-body .type-badge {
+    font-size: 0.85em;
+    padding: 0.2em 0.6em;
+    border-radius: 0.3rem;
+}
+
+.random .random-pokemon-card .card-body .btn {
+    font-size: 1.1em;
+    padding: 0.5em 1.4em;
+    border-radius: 0.5rem;
+}
