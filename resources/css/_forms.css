@@ -1,0 +1,230 @@
+/*
+==============================
+== 📝 FORMULARIOS (Optimizado y con .form-select) =
+==============================
+*/
+
+.form-section {
+    border-radius: var(--card-border-radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    padding: 2.5rem 2rem;
+    margin: 2rem auto;
+    max-width: 500px;
+    color: var(--white);
+    transition: box-shadow var(--transition-time);
+    background: linear-gradient(145deg, var(--midnight-steel), var(--midnight-abyss-light));
+}
+
+.form-section:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+}
+
+.form-section h2 {
+    color: var(--golden-bloom);
+    margin-bottom: 2rem;
+    text-align: center;
+    font-family: var(--font-title);
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    font-size: 2.2rem;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.6rem;
+    color: var(--golden-bloom-light);
+    font-weight: 600;
+    font-family: var(--font-title);
+    letter-spacing: 0.7px;
+    font-size: 1.05rem;
+}
+
+/* Estilos base para inputs, textareas y selects */
+.form-control,
+textarea.form-control,
+select.form-control,
+.form-select {
+    /* <<< AÑADIDO .form-select */
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    border-radius: 12px;
+    border: 1.5px solid var(--midnight-steel-light);
+    background: var(--midnight-steel) !important;
+    color: var(--white) !important;
+    font: 1.05rem var(--font-text);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    outline: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+/* Placeholder */
+.form-control::placeholder,
+textarea.form-control::placeholder,
+.form-select::placeholder {
+    /* <<< AÑADIDO .form-select */
+    color: rgba(255, 255, 255, 0.6) !important;
+    opacity: 1;
+    font-style: italic;
+}
+
+/* Estilos específicos para SELECTS */
+select.form-control,
+.form-select {
+    padding-right: 3rem !important;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%23F2C572" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down"><polyline points="6 9 12 15 18 9"></polyline></svg>') !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 1.2em !important;
+    cursor: pointer;
+}
+
+select.form-control::-ms-expand,
+.form-select::-ms-expand {
+    display: none;
+}
+
+/* Opciones del select */
+select.form-control option,
+.form-select option {
+    /* <<< AÑADIDO .form-select */
+    background-color: var(--midnight-steel);
+    color: var(--white);
+    font-family: var(--font-text);
+    padding: 0.5rem 1rem;
+}
+
+select.form-control option:checked,
+.form-select option:checked {
+    background-color: var(--midnight-abyss-light);
+    color: var(--golden-bloom-light);
+}
+
+select.form-control option:hover,
+.form-select option:hover {
+    background-color: var(--midnight-steel-light);
+}
+
+/* Estilos de FOCO */
+.form-control:focus,
+textarea.form-control:focus,
+select.form-control:focus,
+.form-select:focus {
+    /* <<< AÑADIDO .form-select */
+    border-color: var(--golden-bloom) !important;
+    background: var(--midnight-abyss-light) !important;
+    box-shadow: 0 0 0 4px rgba(242, 197, 114, 0.3), 0 0 15px rgba(242, 197, 114, 0.2) !important;
+}
+
+/* Botones de formulario */
+.form-section .btn-primary,
+.form-section button[type="submit"] {
+    background: var(--golden-bloom);
+    color: var(--midnight-abyss);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 30px;
+    font: 700 1.15em var(--font-title);
+    margin-top: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(242, 197, 114, 0.2);
+    transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    letter-spacing: 0.7px;
+    width: 100%;
+}
+
+.form-section .btn-primary:hover,
+.form-section button[type="submit"]:hover {
+    background: var(--golden-bloom-light);
+    color: var(--midnight-abyss);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(242, 197, 114, 0.3);
+}
+
+.form-section .btn-danger {
+    background: transparent;
+    border: 2px solid var(--golden-bloom);
+    color: var(--golden-bloom);
+    font: 700 1em var(--font-title);
+    border-radius: 10px;
+    padding: 10px 28px;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(242, 197, 114, 0.08);
+}
+
+.form-section .btn-danger:hover {
+    background: var(--golden-bloom);
+    color: var(--midnight-abyss);
+    box-shadow: 0 4px 16px rgba(242, 197, 114, 0.18);
+}
+
+/* Errores y textos de ayuda */
+.form-error {
+    color: #fff !important;
+    background: #F95587;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 0.9em;
+    margin-top: 0.4em;
+    font-weight: 600;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(249, 85, 135, 0.2);
+}
+
+.form-text {
+    color: rgba(255, 255, 255, 0.75) !important;
+    font-size: 0.9em;
+    margin-top: 0.3em;
+}
+
+/* Checkbox y radio */
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: var(--golden-bloom);
+    margin-right: 0.6em;
+    transform: scale(1.1);
+}
+
+/* Checkbox personalizado Pokétek */
+input[type="checkbox"] {
+    accent-color: var(--golden-bloom);
+    width: 1.15em;
+    height: 1.15em;
+    border-radius: 5px;
+    border: 2px solid var(--golden-bloom);
+    background: var(--midnight-steel);
+    transition: box-shadow 0.2s, border-color 0.2s;
+    vertical-align: middle;
+    margin-right: 0.5em;
+    box-shadow: 0 1px 4px rgba(242, 197, 114, 0.08);
+}
+
+input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--golden-bloom-light);
+    border-color: var(--golden-bloom-light);
+}
+
+input[type="checkbox"]:checked {
+    background-color: var(--golden-bloom);
+    border-color: var(--golden-bloom);
+}
+
+input[type="checkbox"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+    .form-section {
+        padding: 1.8rem 1rem;
+    }
+}

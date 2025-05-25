@@ -1,0 +1,82 @@
+/*
+==============================
+== 🖋️ TIPOGRAFÍA =============
+==============================
+*/
+
+h1,
+h2,
+h3,
+h4,
+.display-4,
+.pokemon-name,
+.card-title,
+.header-section h1,
+.btn,
+.badge,
+.type-badge,
+.ability-btn {
+    font-family: var(--font-title);
+    font-weight: 700;
+}
+
+h1,
+.display-4,
+.pokemon-name,
+.card-title,
+.header-section h1,
+h2 {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+h1,
+.display-4,
+.pokemon-name,
+.card-title,
+.header-section h1 {
+    font-size: 1.5rem;
+    /* Ajustar según necesidad */
+}
+
+h2 {
+    font-size: 36px;
+}
+
+h3 {
+    font-size: 28px;
+}
+
+h4 {
+    font-style: italic;
+    font-size: 22px;
+}
+
+strong,
+b,
+.highlight {
+    font-family: var(--font-text);
+    font-weight: 700;
+    font-style: italic;
+    font-size: 18px;
+}
+
+.btn,
+.badge,
+.type-badge,
+.ability-btn {
+    text-transform: capitalize;
+    letter-spacing: 0.5px;
+}
+
+p,
+.description-card,
+.stat-value,
+.stat-name,
+.egg-group-card,
+.card-body,
+.pokemon-number {
+    font-family: var(--font-text);
+    font-size: 18px;
+    color: var(--white);
+}

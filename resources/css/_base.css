@@ -1,0 +1,56 @@
+/*
+==============================
+== ⚙️ BASE ===================
+==============================
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+:root {
+    --golden-bloom: #F2C572;
+    --golden-bloom-light: #FFD89C;
+    --midnight-abyss: #121621;
+    --midnight-abyss-light: #1A2030;
+    --white: #FFFFFF;
+    --white-transparent: rgba(255, 255, 255, 0.1);
+    --midnight-steel: #2C3850;
+    --midnight-steel-light: #3A4A68;
+    --card-border-radius: 16px;
+    --transition-time: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --font-title: 'Josefin Sans', Arial, sans-serif;
+    --font-text: 'Montserrat', Arial, sans-serif;
+}
+
+/*
+==============================
+== 🎨 COLORES Y FONDOS =======
+==============================
+*/
+
+body {
+    background-color: var(--midnight-abyss) !important;
+    margin: 0;
+    min-height: 100vh;
+    line-height: 1.6;
+    padding-top: 76px;
+    font-family: var(--font-text);
+    font-size: 18px;
+    color: var(--white);
+}
+
+a {
+    color: var(--golden-bloom);
+    text-decoration: underline;
+    transition: color 0.2s, text-decoration 0.2s;
+    font-weight: 500;
+    font-family: var(--font-text);
+    cursor: pointer;
+    font-size: 0.97em;
+}
+
+a:hover,
+a:focus {
+    color: var(--golden-bloom-light);
+    text-decoration: underline;
+    outline: none;
+}

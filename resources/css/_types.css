@@ -1,0 +1,95 @@
+/*
+==============================
+== 🎨 TYPE COLORS ============
+==============================
+*/
+
+.normal {
+    background-color: #A8A77A;
+    color: #222;
+}
+
+.fire {
+    background-color: #EE8130;
+    color: #fff;
+}
+
+.water {
+    background-color: #6390F0;
+    color: #fff;
+}
+
+.electric {
+    background-color: #F7D02C;
+    color: #222;
+}
+
+.grass {
+    background-color: #7AC74C;
+    color: #222;
+}
+
+.ice {
+    background-color: #96D9D6;
+    color: #222;
+}
+
+.fighting {
+    background-color: #C22E28;
+    color: #fff;
+}
+
+.poison {
+    background-color: #A33EA1;
+    color: #fff;
+}
+
+.ground {
+    background-color: #E2BF65;
+    color: #222;
+}
+
+.flying {
+    background-color: #A98FF3;
+    color: #222;
+}
+
+.psychic {
+    background-color: #F95587;
+    color: #fff;
+}
+
+.bug {
+    background-color: #A6B91A;
+    color: #222;
+}
+
+.rock {
+    background-color: #B6A136;
+    color: #fff;
+}
+
+.ghost {
+    background-color: #735797;
+    color: #fff;
+}
+
+.dragon {
+    background-color: #6F35FC;
+    color: #fff;
+}
+
+.dark {
+    background-color: #705746;
+    color: #fff;
+}
+
+.steel {
+    background-color: #B7B7CE;
+    color: #222;
+}
+
+.fairy {
+    background-color: #D685AD;
+    color: #222;
+}

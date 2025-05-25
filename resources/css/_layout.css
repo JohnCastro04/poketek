@@ -1,0 +1,258 @@
+/*
+==============================
+== 🧭 HEADER =================
+==============================
+*/
+
+header {
+    background: rgba(18, 22, 33, 0.85);
+    color: var(--golden-bloom);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1050;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+    transition: background 0.3s;
+    min-height: 70px;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+header::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 5px;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent 0%, var(--golden-bloom) 40%, var(--golden-bloom-light) 60%, transparent 100%);
+    opacity: 0.8;
+    animation: headerGlowBar 2.5s ease-in-out infinite;
+}
+
+@keyframes headerGlowBar {
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+.header-section,
+.pokemon-header {
+    background: linear-gradient(135deg, var(--midnight-steel), var(--midnight-abyss-light));
+    color: var(--golden-bloom);
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+    border-radius: 0 0 var(--card-border-radius) var(--card-border-radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/*
+==============================
+== Sidenav =================
+==============================
+*/
+
+/* Estilos Base para el Sidenav */
+.sidenav {
+    height: 100%;
+    /* Ocupa toda la altura */
+    width: 0;
+    /* Empieza cerrado (ancho 0) */
+    position: fixed;
+    /* Se queda fijo en la pantalla */
+    z-index: 1055;
+    /* Justo encima del header (o ajústalo si es necesario) */
+    top: 0;
+    left: 0;
+    background-color: rgba(18, 22, 33, 0.95);
+    /* Fondo oscuro similar al header */
+    overflow-x: hidden;
+    /* Evita scroll horizontal */
+    transition: 0.5s;
+    /* Transición suave para abrir/cerrar */
+    padding-top: 60px;
+    /* Espacio para el botón de cerrar */
+    border-right: 2px solid var(--golden-bloom);
+    /* Borde dorado */
+    box-shadow: 3px 0 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilos para los enlaces del Sidenav */
+.sidenav a {
+    padding: 10px 15px 10px 32px;
+    text-decoration: none;
+    font-size: 22px;
+    color: var(--golden-bloom);
+    /* Color dorado */
+    font-family: var(--font-title);
+    /* Usa tu fuente */
+    font-weight: 600;
+    display: block;
+    transition: 0.3s;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+    /* Línea divisoria sutil */
+}
+
+.sidenav a:last-child {
+    border-bottom: none;
+}
+
+/* Hover para los enlaces */
+.sidenav a:hover {
+    color: #ffffff;
+    /* Blanco al pasar el ratón */
+    background-color: var(--midnight-abyss-light);
+    /* Resaltado sutil */
+}
+
+/* Botón de cerrar */
+.sidenav .closebtn {
+    position: absolute;
+    top: 15px;
+    /* Ajusta la posición vertical */
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    color: var(--golden-bloom);
+    border-bottom: none;
+    /* Quita el borde inferior */
+    padding: 0;
+    /* Quita padding extra */
+}
+
+.sidenav .closebtn:hover {
+    color: #ffffff;
+    background-color: transparent;
+    /* Sin fondo al pasar el ratón */
+}
+
+/* Clase para abrir el Sidenav (se añade/quita con JS) */
+.sidenav.open {
+    width: 280px;
+    /* Ancho del Sidenav cuando está abierto */
+}
+
+/* Opcional: Overlay oscuro cuando el Sidenav está abierto */
+#sidenavOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1051;
+    /* Debajo del Sidenav pero encima del contenido */
+    display: none;
+    /* Oculto por defecto */
+    transition: opacity 0.5s;
+    opacity: 0;
+}
+
+#sidenavOverlay.show {
+    display: block;
+    opacity: 1;
+}
+
+
+@media (max-width: 480px) {
+
+    /* Ajustes más agresivos para pantallas muy pequeñas */
+    header .d-flex li {
+        min-width: auto !important;
+    }
+
+    .login-text,
+    .user-name {
+        display: none;
+        /* Oculta el texto aquí si no lo hiciste antes */
+    }
+
+    header .btn,
+    header .dropdown-toggle {
+        padding: 5px 8px;
+        /* Reduce padding de botones */
+    }
+
+    header .dropdown-toggle img {
+        margin-right: 0 !important;
+    }
+}
+
+
+/*
+==============================
+== 📢 FOOTER =================
+==============================
+*/
+
+footer,
+.footer {
+    background: linear-gradient(90deg, var(--midnight-abyss) 60%, var(--midnight-steel) 100%);
+    color: rgba(255, 255, 255, 0.85);
+    font-family: var(--font-text);
+    font-size: 1rem;
+    padding: 2rem 0 1.2rem 0;
+    margin-top: 3rem;
+    border-top: 2px solid var(--golden-bloom);
+    box-shadow: 0 -4px 24px rgba(44, 56, 80, 0.12);
+    text-align: center;
+    letter-spacing: 0.2px;
+}
+
+footer .container,
+.footer .container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+footer p,
+.footer p {
+    margin-bottom: 0.4em;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.98em;
+}
+
+footer p strong,
+.footer p strong {
+    color: var(--golden-bloom);
+    font-weight: 700;
+}
+
+footer a,
+.footer a {
+    color: var(--golden-bloom);
+    text-decoration: underline dotted;
+    transition: color 0.2s;
+}
+
+footer a:hover,
+.footer a:focus {
+    color: var(--golden-bloom-light);
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+
+    footer,
+    .footer {
+        font-size: 0.95rem;
+        padding: 1.2rem 0 0.7rem 0;
+    }
+
+    footer .container,
+    .footer .container {
+        padding: 0 1rem;
+    }
+}

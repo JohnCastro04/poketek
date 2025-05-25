@@ -1,5 +1,5 @@
 import './bootstrap';
-import '../css/pokedex.css'; // <-- Importa tu CSS personalizado
+import '../css/main.css'; // <-- Importa tu CSS personalizado
 
 import Alpine from 'alpinejs';
 
