@@ -31,8 +31,8 @@
     </div>
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" id="closeSidenav">&times;</a>
+        <a href="{{ route('home') }}">Inicio</a>
         <a href="{{ route('pokedex.index') }}">PokéDex</a>
-        <a href="#">Juegos</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

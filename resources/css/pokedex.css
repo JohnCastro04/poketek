@@ -204,7 +204,8 @@ header::after {
 .pokemon-card,
 .card {
     height: auto;
-    width: 380px;
+    width: 440px;
+    /* Aumenta el ancho de la card */
     max-width: 100%;
     z-index: 1;
 }
@@ -265,9 +266,9 @@ header::after {
 }
 
 .pokemon-item:hover .pokemon-number-bg {
-    color: #F2C572;
+    color: var(--golden-bloom);
     opacity: 0.8;
-    text-shadow: 0 0 10px #F2C572, 0 0 20px #F2C572;
+    text-shadow: 0 0 10px var(--golden-bloom), 0 0 20px var(--golden-bloom);
 }
 
 .pokemon-img {
@@ -317,7 +318,7 @@ header::after {
 */
 
 .pokemon-card-body {
-    padding: 1.5rem;
+    padding: 2rem;
     position: relative;
 }
 
@@ -439,26 +440,78 @@ header::after {
 ==============================
 */
 
-.btn-danger {
-    background-color: transparent;
-    border: 2px solid var(--golden-bloom);
-    color: var(--golden-bloom);
+/* Estilos para todos los botones, incluyendo los de Bootstrap */
+button:not(.navbar-toggler),
+.btn:not(.navbar-toggler),
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+    background-color: var(--golden-bloom);
+    color: var(--midnight-abyss);
+    /* Letra oscura */
+    border: none;
     padding: 10px 25px;
     border-radius: 8px;
     font-weight: 600;
-    transition: all var(--transition-time);
-    margin-top: 1rem;
-    width: 100%;
-    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    /* Transición más corta y suave */
+    cursor: pointer;
+    position: relative;
+    /* Para el efecto de la línea inferior */
+    overflow: hidden;
+    /* Para asegurar que la línea de relleno no se desborde */
+    transform: scale(1);
+    /* Asegura que el estado inicial de escala es 1 */
 }
 
-.btn-danger:hover {
-    background-color: var(--golden-bloom);
+/* Pseudo-elemento para la línea de relleno inferior */
+button:not(.navbar-toggler)::before,
+.btn:not(.navbar-toggler)::before,
+input[type="button"]::before,
+input[type="submit"]::before,
+input[type="reset"]::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    /* Empieza sin ancho */
+    height: 3px;
+    /* Grosor de la línea */
+    background-color: var(--midnight-abyss);
+    /* Color de la línea de relleno, oscuro */
+    transition: width 0.3s ease-out;
+    /* Transición para el ancho de la línea */
+}
+
+/* Hover effect para todos los botones */
+button:not(.navbar-toggler):hover,
+.btn:not(.navbar-toggler):hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover {
+    background-color: var(--golden-bloom-light);
+    /* Un tono más claro de golden-bloom al pasar el ratón */
     color: var(--midnight-abyss);
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(242, 197, 114, 0.3);
+    /* Asegurar que la letra sigue siendo oscura */
+    transform: scale(1.03);
+    /* Aumento mínimo de tamaño */
+    box-shadow: 0 4px 15px rgba(242, 197, 114, 0.4);
+    /* Sombra más pronunciada al pasar el ratón */
 }
 
+/* Efecto de línea de relleno al hacer hover */
+button:not(.navbar-toggler):hover::before,
+.btn:not(.navbar-toggler):hover::before,
+input[type="button"]:hover::before,
+input[type="submit"]:hover::before,
+input[type="reset"]:hover::before {
+    width: 100%;
+    /* La línea se extiende de izquierda a derecha */
+}
+
+
+/* Mantener estilos específicos para .ability-btn si es necesario sobrescribir algo */
 .ability-card .ability-btn {
     background: var(--midnight-steel-light);
     color: var(--golden-bloom);

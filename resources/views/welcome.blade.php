@@ -6,8 +6,7 @@
     <section class="header-section text-center">
         <div class="container">
             <h1 class="display-4">¡Bienvenidos a Pokétek!</h1>
-            <p class="description-card">Tu pokedex personal para descubrir, aprender y coleccionar todos tus Pokémon favoritos.</p>
-            <a href="#features" class="btn btn-danger scroll-to-section">Explorar Ahora</a>
+            <p class="description-card">Tu pokedex personal para descubrir, aprender y jugar.</p>
         </div>
     </section>
 

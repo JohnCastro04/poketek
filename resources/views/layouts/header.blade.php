@@ -28,22 +28,15 @@
                     @guest
                         <a href="{{ route('login') }}" class="btn d-flex align-items-center"
                             style="border: 2px solid var(--golden-bloom); color: var(--golden-bloom); background: transparent; font-family: var(--font-title); font-weight: 700;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                class="bi bi-person-circle me-2" viewBox="0 0 16 16">
-                                <path
-                                    d="M13.468 12.37C12.758 11.226 11.275 10.5 8 10.5s-4.758.726-5.468 1.87A6.978 6.978 0 0 0 8 15a6.978 6.978 0 0 0 5.468-2.63z" />
-                                <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
-                                <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1z" />
-                            </svg>
                             Iniciar Sesión
                         </a>
                     @else
                         <div class="dropdown">
                             <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="userMenu"
                                 data-bs-toggle="dropdown" aria-expanded="false"
-                                style="color: var(--golden-bloom); font-family: var(--font-title); font-weight: 700;">
+                                style="color: var(--golden-bloom); font-family: var(--font-title); font-weight: 700; ">
                                 <img src="{{ asset('images/default-user.png') }}" alt="avatar" width="40" height="40">
-                                <span>{{ Auth::user()->name }}</span>
+                                <span style="margin-left: 2px;">{{ Auth::user()->name }}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end mt-2 shadow" aria-labelledby="userMenu"
                                 style="background: linear-gradient(145deg, var(--midnight-steel), var(--midnight-abyss-light)); border-radius: 14px; border: 2px solid var(--golden-bloom); min-width: 180px;">
