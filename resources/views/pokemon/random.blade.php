@@ -45,24 +45,33 @@
                         if (data.success && data.data && data.data.length > 0) {
                             let cardsHtml = '';
                             data.data.forEach((p, index) => {
-                                // Asegúrate de que p.image existe antes de usarlo
-                                const imgUrl = p.image || ''; // Si p.image es nulo/undefined, usa una cadena vacía
+                                // Probabilidad shiny: 1/50
+                                const isShiny = Math.random() < (1 / 20);
+
+                                // Recupera la imagen normal y modifica la ruta si es shiny
+                                let imgUrl = p.image || '';
+                                if (isShiny && imgUrl.includes('/official-artwork/')) {
+                                    imgUrl = imgUrl.replace('/official-artwork/', '/official-artwork/shiny/');
+                                }
 
                                 const delay = `${index * 0.1}s`;
                                 const cardDelay = `${index * 0.08}s`;
 
                                 cardsHtml += `
-                                <div class="card mx-auto bento-card mb-3 random-pokemon-card" style="cursor:pointer; animation-delay: ${cardDelay};">
+                                <div class="card mx-auto bento-card mb-3 random-pokemon-card${isShiny ? ' ultra-shiny-glow' : ''}" style="cursor:pointer; animation-delay: ${cardDelay};">
+                                    ${isShiny ? `<span class="ultra-shiny-star" title="¡Shiny!">★</span>` : ''}
+                                    <span class="badge bg-secondary">#${String(p.id || '0000').padStart(4, '0')}</span>
                                     <div class="pokemon-img-container d-flex justify-content-center align-items-center">
                                         <img src="${imgUrl}"
                                              alt="${p.display_name || 'Pokémon'}"
                                              class="pokemon-image img-fluid"
                                              style="animation: pokemon-pop 0.6s ease-out forwards; animation-delay: ${delay};"
-                                             onerror="this.onerror=null;this.src='{{ asset('images/pokemon/placeholder.png') }}'; console.error('Error cargando imagen:', 'URL: ${imgUrl}', 'Pokémon: ${p.display_name || 'Desconocido'}', 'ID: ${p.id || 'Desconocido'}');">
+                                             onerror="this.onerror=null;this.src='{{ asset('images/pokemon/placeholder.png') }}';">
                                     </div>
                                     <div class="card-body text-center">
-                                        <h3 class="fw-bold mb-1">${p.display_name || 'Nombre Desconocido'}</h3>
-                                        <div class="mb-2"><span class="badge bg-secondary">#${String(p.id || '0000').padStart(4, '0')}</span></div>
+                                        <h3 class="fw-bold mb-1${isShiny ? ' golden-text' : ''}">
+                                            ${p.display_name || 'Nombre Desconocido'}
+                                        </h3>
                                         <div class="mb-2">
                                             ${(p.types || []).map(t => {
                                                 const key = (t || '').toLowerCase();
@@ -75,8 +84,7 @@
                                 </div>`;
                             });
 
-                            result.innerHTML = `<div class="random-pokemon-row" style="opacity: 0; transform: scale(0.98); transition: opacity 0.4s ease, transform 0.4s ease;">${cardsHtml}</div>`;
-
+                            result.innerHTML = `<div class="random-pokemon-row">${cardsHtml}</div>`;
                             setTimeout(() => {
                                 const container = result.querySelector('.random-pokemon-row');
                                 if (container) {
@@ -84,6 +92,16 @@
                                     container.style.transform = 'scale(1)';
                                 }
                                 result.classList.add('random');
+
+                                // --- REINICIAR ANIMACIÓN BOUNCE EN HOVER ---
+                                document.querySelectorAll('.random-pokemon-card img.pokemon-image').forEach(img => {
+                                    img.addEventListener('mouseenter', function () {
+                                        this.style.animation = 'none';
+                                        // Forzar reflow
+                                        void this.offsetWidth;
+                                        this.style.animation = '';
+                                    });
+                                });
                             }, 50);
                         } else {
                             result.innerHTML = `<div class="alert alert-warning text-center">No se encontró ningún Pokémon con esos filtros o la API no devolvió datos válidos.</div>`;
