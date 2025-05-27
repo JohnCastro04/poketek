@@ -57,7 +57,13 @@ header::after {
     position: relative;
     overflow: hidden;
 }
-
+header img {
+    transition: transform 0.2s;
+}
+header img:hover {
+    transform: scale(1.08);
+    cursor: pointer;
+}
 /*
 ==============================
 == Sidenav =================
