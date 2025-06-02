@@ -75,4 +75,43 @@
             </ul>
         </nav>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const sidenavToggle = document.getElementById('sidenavToggle');
+            const mySidenav = document.getElementById('mySidenav');
+            const closeSidenav = document.getElementById('closeSidenav');
+
+            // Crea el overlay dinámicamente (opcional)
+            let overlay = document.createElement('div');
+            overlay.id = 'sidenavOverlay';
+            document.body.appendChild(overlay);
+
+            // Función para abrir Sidenav
+            function openNav() {
+                mySidenav.classList.add('open');
+                overlay.classList.add('show');
+            }
+
+            // Función para cerrar Sidenav
+            function closeNav() {
+                mySidenav.classList.remove('open');
+                overlay.classList.remove('show');
+            }
+
+            // Event Listener para el botón de hamburguesa
+            if (sidenavToggle) {
+                sidenavToggle.addEventListener('click', openNav);
+            }
+
+            // Event Listener para el botón de cerrar
+            if (closeSidenav) {
+                closeSidenav.addEventListener('click', closeNav);
+            }
+
+            // Event Listener para cerrar haciendo clic en el overlay (opcional)
+            overlay.addEventListener('click', closeNav);
+
+        });
+    </script>
 </header>

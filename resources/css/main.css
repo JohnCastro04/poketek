@@ -24,3 +24,7 @@
 .pokemon-card * {
     font-family: var(--font-text) !important;
 }
+
+.text-danger {
+        color: #FF6B6B !important;
+    }

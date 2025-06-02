@@ -42,7 +42,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="permission" class="form-label" style="color: var(--golden-bloom);">Permiso de Administrador</label>
+                            <label for="permission" class="form-label" style="color: var(--golden-bloom);">Permiso</label>
                             <select id="permission" name="permission"
                                     required {{-- AÑADIDO: campo obligatorio --}}
                                     class="form-select" style="background-color: var(--midnight-steel-light); color: var(--white); border-color: var(--midnight-steel); font-family: var(--font-text);">
@@ -50,7 +50,7 @@
                                 <option value="1" {{ old('permission', $user->permission) == 1 ? 'selected' : '' }}>Administrador (1)</option>
                             </select>
                             @error('permission')
-                                <div class="text-danger mt-1" style="font-size: 0.875em; color: #FF6347;">{{ $message }}</div>
+                                <div class="text-danger mt-1">{{ $message }}</div>
                             @enderror
                         </div>
 
