@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PokemonController;
 use App\Http\Controllers\ProfileController;
+// Asegúrate de que este controlador exista y tenga el namespace correcto
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,8 +26,8 @@ Route::get('/pokemon/random', function () {
 
 // Detalle de Pokémon (debe ir después)
 Route::get('/pokemon/{nameOrId}', [PokemonController::class, 'showPokemon'])
-     ->name('pokemon.show')
-     ->where('nameOrId', '[a-zA-Z\-]+|\d+');
+    ->name('pokemon.show')
+    ->where('nameOrId', '[a-zA-Z\-]+|\d+');
 
 // Perfil de usuario
 Route::get('/profile', [ProfileController::class, 'show'])
@@ -41,7 +43,7 @@ Route::get('/profile', [ProfileController::class, 'show'])
 Route::prefix('api')->group(function () {
     // Obtener Pokémon específico
     Route::get('/pokemon/{nameOrId}', [PokemonController::class, 'getPokemon'])
-         ->where('nameOrId', '[a-zA-Z\-]+|\d+');
+        ->where('nameOrId', '[a-zA-Z\-]+|\d+');
 
     // Buscar Pokémon
     Route::get('/pokemon/buscar', [PokemonController::class, 'buscar'])->name('pokemon.buscar');
@@ -100,7 +102,7 @@ Route::prefix('api')->group(function () {
     });
 });
 
-// Rutas de autenticación
+// Rutas de autenticación de Breeze
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -113,3 +115,17 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+/*
+|--------------------------------------------------------------------------
+| Admin Routes (Protección directamente en el controlador)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    // Rutas para gestión de usuarios
+    Route::get('/users/{user}/edit', [AdminDashboardController::class, 'editUser'])->name('users.edit');
+    Route::patch('/users/{user}', [AdminDashboardController::class, 'updateUser'])->name('users.update');
+    Route::delete('/users/{user}', [AdminDashboardController::class, 'deleteUser'])->name('users.destroy');
+});

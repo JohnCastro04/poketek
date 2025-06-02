@@ -1,4 +1,3 @@
-{{-- filepath: c:\xampp\htdocs\poketek\resources\views\layouts\header.blade.php --}}
 <header class="px-4 py-3"
     style="background: rgba(18,22,33,0.85); box-shadow: 0 2px 16px rgba(0,0,0,0.25); position: fixed; width: 100%; z-index: 1050;">
     <div class="container-fluid">
@@ -46,16 +45,27 @@
                                         Perfil
                                     </a>
                                 </li>
-                                <li>
-                                    <hr class="dropdown-divider" style="border-color: var(--golden-bloom);">
-                                </li>
-                                <li>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item py-2"
+
+                                @if (Auth::user()->permission)
+                                    <li>
+                                        <a class="dropdown-item py-2" href="{{ route('admin.dashboard') }}"
                                             style="color: var(--golden-bloom); font-family: var(--font-title); font-weight: 700;">
+                                            Panel de Admin
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <hr class="dropdown-divider" style="border-color: var(--golden-bloom);">
+                                    </li>
+                                @endif
+
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}" id="logout-form">
+                                        @csrf
+                                        <a href="#" class="dropdown-item py-2"
+                                            style="color: var(--golden-bloom); font-family: var(--font-title); font-weight: 700;"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                             Cerrar sesión
-                                        </button>
+                                        </a>
                                     </form>
                                 </li>
                             </ul>
@@ -66,45 +76,3 @@
         </nav>
     </div>
 </header>
-
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-
-        const sidenavToggle = document.getElementById('sidenavToggle');
-        const mySidenav = document.getElementById('mySidenav');
-        const closeSidenav = document.getElementById('closeSidenav');
-
-        // Crea el overlay dinámicamente (opcional)
-        let overlay = document.createElement('div');
-        overlay.id = 'sidenavOverlay';
-        document.body.appendChild(overlay);
-
-        // Función para abrir Sidenav
-        function openNav() {
-            mySidenav.classList.add('open');
-            overlay.classList.add('show'); 
-        }
-
-        // Función para cerrar Sidenav
-        function closeNav() {
-            mySidenav.classList.remove('open');
-            overlay.classList.remove('show'); 
-        }
-
-        // Event Listener para el botón de hamburguesa
-        if (sidenavToggle) {
-            sidenavToggle.addEventListener('click', openNav);
-        }
-
-        // Event Listener para el botón de cerrar
-        if (closeSidenav) {
-            closeSidenav.addEventListener('click', closeNav);
-        }
-
-        // Event Listener para cerrar haciendo clic en el overlay (opcional)
-        overlay.addEventListener('click', closeNav);
-
-    });
-</script>
