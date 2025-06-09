@@ -4,92 +4,92 @@
 ==============================
 */
 
-.normal {
-    background-color: #a8a878;
-    color: #222;
+.type-normal, .normal {
+    background: linear-gradient(135deg, #a8a878, #9a9a60, #7a7a44) !important;
+    color: #222 !important;
 }
 
-.fire {
-    background-color: #ef8030;
-    color: #fff;
+.type-fuego, .type-fire, .fire {
+    background: linear-gradient(135deg, #ef8030, #e06600, #a34700) !important;
+    color: #fff !important;
 }
 
-.water {
-    background-color: #6890f0;
-    color: #fff;
+.type-agua, .type-water, .water {
+    background: linear-gradient(135deg, #6890f0, #4a70dc, #2a4cb8) !important;
+    color: #fff !important;
 }
 
-.electric {
-    background-color: #f9d030;
-    color: #222;
+.type-eléctrico, .type-electric, .electric {
+    background: linear-gradient(135deg, #f9d030, #e6b800, #cc9e00) !important;
+    color: #222 !important;
 }
 
-.grass {
-    background-color: #78c84f;
-    color: #222;
+.type-planta, .type-grass, .grass {
+    background: linear-gradient(135deg, #78c84f, #5da03f, #3d7a2d) !important;
+    color: #222 !important;
 }
 
-.ice {
-    background-color: #99d8d8;
-    color: #222;
+.type-hielo, .type-ice, .ice {
+    background: linear-gradient(135deg, #99d8d8, #66bcbc, #3aa0a0) !important;
+    color: #222 !important;
 }
 
-.fighting {
-    background-color: #c03128;
-    color: #fff;
+.type-lucha, .type-fighting, .fighting {
+    background: linear-gradient(135deg, #c03128, #a02020, #701010) !important;
+    color: #fff !important;
 }
 
-.poison {
-    background-color: #a040a0;
-    color: #fff;
+.type-veneno, .type-poison, .poison {
+    background: linear-gradient(135deg, #a040a0, #803080, #601060) !important;
+    color: #fff !important;
 }
 
-.ground {
-    background-color: #e0c068;
-    color: #222;
+.type-tierra, .type-ground, .ground {
+    background: linear-gradient(135deg, #e0c068, #c0a050, #9e8030) !important;
+    color: #222 !important;
 }
 
-.flying {
-    background-color: #a790f0;
-    color: #222;
+.type-volador, .type-flying, .flying {
+    background: linear-gradient(135deg, #a790f0, #8c78d8, #6a50b0) !important;
+    color: #222 !important;
 }
 
-.psychic {
-    background-color: #f85888;
-    color: #fff;
+.type-psíquico, .type-psychic, .psychic {
+    background: linear-gradient(135deg, #f85888, #e04070, #b02050) !important;
+    color: #fff !important;
 }
 
-.bug {
-    background-color: #a8b820;
-    color: #222;
+.type-bicho, .type-bug, .bug {
+    background: linear-gradient(135deg, #a8b820, #8c9c1c, #6a7a10) !important;
+    color: #222 !important;
 }
 
-.rock {
-    background-color: #b7a039;
-    color: #fff;
+.type-roca, .type-rock, .rock {
+    background: linear-gradient(135deg, #b7a039, #95822e, #6a6020) !important;
+    color: #fff !important;
 }
 
-.ghost {
-    background-color: #705898;
-    color: #fff;
+.type-fantasma, .type-ghost, .ghost {
+    background: linear-gradient(135deg, #705898, #5a4378, #3c2c60) !important;
+    color: #fff !important;
 }
 
-.dragon {
-    background-color: #7038f8;
-    color: #fff;
+.type-dragón, .type-dragon, .dragon {
+    background: linear-gradient(135deg, #7038f8, #5020d0, #3000a0) !important;
+    color: #fff !important;
 }
 
-.dark {
-    background-color: #6f5848;
-    color: #fff;
+.type-siniestro, .type-dark, .dark {
+    background: linear-gradient(135deg, #6f5848, #4c392f, #2a1e16) !important;
+    color: #fff !important;
 }
 
-.steel {
-    background-color: #b8b8d0;
-    color: #222;
+.type-acero, .type-steel, .steel {
+    background: linear-gradient(135deg, #b8b8d0, #9898b0, #787890) !important;
+    color: #222 !important;
 }
 
-.fairy {
-    background-color: #f0b6bc;
-    color: #222;
+.type-hada, .type-fairy, .fairy {
+    background: linear-gradient(135deg, #f0b6bc, #e19098, #d07080) !important;
+    color: #222 !important;
 }

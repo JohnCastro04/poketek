@@ -34,6 +34,7 @@
         <a href="{{ route('home') }}">Inicio</a>
         <a href="{{ route('pokedex.index') }}">PokéDex</a>
         <a href="{{ route('pokemon.random') }}">Generar</a>
+        <a href="{{ route('pokemon.color') }}">Colores</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

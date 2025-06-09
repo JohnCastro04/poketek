@@ -7,6 +7,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const btn = document.getElementById('randomBtn');
+            const shinyBtn = document.getElementById('shinyBtn');
             const result = document.getElementById('randomResult');
             const loader = document.getElementById('randomLoader');
             const pokemonNameElement = document.getElementById('pokemon-name');
@@ -18,9 +19,11 @@
             const pokemonIdElement = document.getElementById('pokemon-id');
             const pokemonTypesElement = document.getElementById('pokemon-types');
 
-            // Variables globales para los colores
+            // Variables globales para los colores y shiny
             let currentPalette = [];
-            let currentCopyTooltip = null; // Para manejar el tooltip de copiar color
+            let currentCopyTooltip = null;
+            let isShiny = false;
+            let currentPokemon = null;
 
             // Traducciones de los tipos de Pokémon
             const typeTranslations = {
@@ -83,7 +86,7 @@
 
                 const usableColors = colors.filter(([r, g, b]) => {
                     const lightness = (Math.max(r, g, b) + Math.min(r, g, b)) / 2;
-                    return lightness > 30 && lightness < 225; // Evitar colores muy claros o muy oscuros
+                    return lightness > 30 && lightness < 225;
                 });
 
                 usableColors.sort((a, b) => {
@@ -91,7 +94,7 @@
                     const [hB, sB, lB] = rgbToHsl(...b);
                     const scoreA = sA * (1 - Math.abs(lA - 0.5));
                     const scoreB = sB * (1 - Math.abs(lB - 0.5));
-                    return scoreB - scoreA; // Priorizar colores más saturados y de luminosidad media
+                    return scoreB - scoreA;
                 });
 
                 if (usableColors.length > 0) {
@@ -111,9 +114,8 @@
                     }
                 }
 
-                // Rellenar si no hay suficientes colores distintos
                 while (symbolicColors.length < numColors) {
-                    symbolicColors.push([...symbolicColors[0]]); // Usar el primer color para rellenar
+                    symbolicColors.push([...symbolicColors[0]]);
                 }
 
                 return symbolicColors;
@@ -123,32 +125,61 @@
             function applyColorTheme(symbolicColors) {
                 currentPalette = symbolicColors;
 
-                // Aplicar colores a las cards
                 const cards = document.querySelectorAll('.pokemon-card');
                 cards.forEach((card, index) => {
                     const colorIndex = index % symbolicColors.length;
                     const rgb = `rgb(${symbolicColors[colorIndex].join(',')})`;
                     const [h, s, l] = rgbToHsl(...symbolicColors[colorIndex]);
 
+                    // Usar el tercer color (índice 2) para el glow de fondo, o el primer color si no hay suficientes
+                    const glowColorIndex = symbolicColors.length > 2 ? 2 : 0;
+                    const glowRgb = `rgb(${symbolicColors[glowColorIndex].join(',')})`;
+                    
                     card.style.setProperty('--card-color', rgb);
                     card.style.setProperty('--card-color-light', `rgba(${symbolicColors[colorIndex].join(',')}, 0.1)`);
                     card.style.setProperty('--card-color-medium', `rgba(${symbolicColors[colorIndex].join(',')}, 0.3)`);
                     card.style.setProperty('--text-color', l > 0.6 ? '#121621' : '#ffffff');
+                    card.style.setProperty('--glow-color', glowRgb);
 
-                    // Aplicar color a los títulos de las cards
                     const cardTitle = card.querySelector('.card-title');
                     if (cardTitle) {
                         cardTitle.style.color = rgb;
                     }
                 });
 
-                // Aplicar color principal al botón
+                // Aplicar colores a los botones con !important para sobrescribir CSS
                 const primaryColor = `rgb(${symbolicColors[0].join(',')})`;
-                btn.style.backgroundColor = primaryColor;
-                const [h, s, l] = rgbToHsl(...symbolicColors[0]);
-                btn.style.color = l > 0.6 ? "#121621" : "#fff";
+                const [h1, s1, l1] = rgbToHsl(...symbolicColors[0]);
+                const primaryTextColor = l1 > 0.6 ? "#121621" : "#fff";
+                
+                // Crear gradiente para el botón principal
+                const primaryGradient = `linear-gradient(135deg, ${primaryColor}, rgba(${symbolicColors[0].join(',')}, 0.8))`;
+                const primaryShadow = `0 8px 25px rgba(${symbolicColors[0].join(',')}, 0.3)`;
+                const primaryHoverShadow = `0 12px 35px rgba(${symbolicColors[0].join(',')}, 0.4)`;
+                
+                btn.style.setProperty('background', primaryGradient, 'important');
+                btn.style.setProperty('color', primaryTextColor, 'important');
+                btn.style.setProperty('box-shadow', primaryShadow, 'important');
+                btn.setAttribute('data-hover-shadow', primaryHoverShadow);
 
-                // Actualizar paleta visual
+                // Aplicar color al botón shiny
+                if (shinyBtn) {
+                    const secondaryColor = symbolicColors.length > 1 ? `rgb(${symbolicColors[1].join(',')})` : primaryColor;
+                    const [h2, s2, l2] = symbolicColors.length > 1 ? rgbToHsl(...symbolicColors[1]) : [h1, s1, l1];
+                    const secondaryTextColor = l2 > 0.6 ? "#121621" : "#fff";
+                    
+                    // Crear gradiente para el botón shiny
+                    const secondaryColorArray = symbolicColors.length > 1 ? symbolicColors[1] : symbolicColors[0];
+                    const secondaryGradient = `linear-gradient(135deg, ${secondaryColor}, rgba(${secondaryColorArray.join(',')}, 0.8))`;
+                    const secondaryShadow = `0 8px 25px rgba(${secondaryColorArray.join(',')}, 0.3)`;
+                    const secondaryHoverShadow = `0 12px 35px rgba(${secondaryColorArray.join(',')}, 0.4)`;
+                    
+                    shinyBtn.style.setProperty('background', secondaryGradient, 'important');
+                    shinyBtn.style.setProperty('color', secondaryTextColor, 'important');
+                    shinyBtn.style.setProperty('box-shadow', secondaryShadow, 'important');
+                    shinyBtn.setAttribute('data-hover-shadow', secondaryHoverShadow);
+                }
+
                 updatePaletteDisplay(symbolicColors);
             }
 
@@ -166,9 +197,8 @@
                     box.setAttribute('data-rgb', rgbString);
                     box.setAttribute('data-hex', hexString);
 
-                    // Añadir evento click para copiar color
                     box.addEventListener('click', function (event) {
-                        event.stopPropagation(); // Evitar que el clic se propague al documento
+                        event.stopPropagation();
                         showCopyOptions(this, rgbString, hexString);
                     });
 
@@ -177,15 +207,13 @@
                 paletteDisplay.classList.add('loaded');
             }
 
-            // Función para mostrar opciones de copiar color (CORREGIDA)
+            // Función para mostrar opciones de copiar color
             function showCopyOptions(element, rgb, hex) {
-                // Eliminar cualquier tooltip existente
                 if (currentCopyTooltip) {
                     currentCopyTooltip.remove();
                     currentCopyTooltip = null;
                 }
 
-                // Usar el color específico del elemento clickeado
                 const clickedColor = rgb;
                 const rgbValues = rgb.match(/\d+/g).map(Number);
                 const [r, g, b] = rgbValues;
@@ -195,7 +223,6 @@
                 const tooltip = document.createElement('div');
                 tooltip.className = 'color-copy-tooltip';
                 
-                // Estructura HTML usando el color específico clickeado
                 tooltip.innerHTML = `
                     <h5 class="tooltip-title">Copiar Formato</h5>
                     <button class="copy-btn" data-color="${hex}" style="background-color: ${clickedColor}; color: ${textColor}; border-color: ${clickedColor};">
@@ -213,10 +240,9 @@
                 tooltip.style.top = `${rect.bottom + window.scrollY + 10}px`;
                 tooltip.style.left = `${rect.left + window.scrollX + (rect.width / 2)}px`;
 
-                // Añadir event listeners a los botones de copiar (CORREGIDO)
                 tooltip.querySelectorAll('.copy-btn').forEach(button => {
                     button.addEventListener('click', async function (e) {
-                        e.stopPropagation(); // Evitar propagación
+                        e.stopPropagation();
                         const colorToCopy = this.dataset.color;
                         const originalHTML = this.innerHTML;
 
@@ -239,7 +265,6 @@
                                 this.innerHTML = originalHTML;
                             }, 1200);
                             
-                            // Cerrar tooltip después de copiar
                             setTimeout(() => {
                                 if (currentCopyTooltip) {
                                     currentCopyTooltip.remove();
@@ -268,21 +293,41 @@
                         }
                     };
                     document.addEventListener('click', handleClickOutside);
-                }, 100); // Pequeño delay para evitar cierre inmediato
+                }, 100);
+            }
+
+            // Función para obtener URL de imagen shiny/normal
+            function getImageUrl(pokemon, shiny = false) {
+                if (!pokemon.image) return null;
+                
+                const baseUrl = pokemon.image;
+                if (shiny) {
+                    if (baseUrl.includes('/official-artwork/')) {
+                        return baseUrl.replace('/official-artwork/', '/official-artwork/shiny/');
+                    }
+                    return baseUrl;
+                } else {
+                    if (baseUrl.includes('/shiny/')) {
+                        return baseUrl.replace('/official-artwork/shiny/', '/official-artwork/');
+                    }
+                    return baseUrl;
+                }
             }
 
             // Función para actualizar los detalles del Pokémon en la UI
-            function updatePokemonDetails(pokemon) {
-                // Nombre e ID
+            function updatePokemonDetails(pokemon, forceShiny = null) {
+                const useShiny = forceShiny !== null ? forceShiny : isShiny;
+                
                 pokemonNameElement.textContent = (pokemon.display_name || pokemon.name || 'Desconocido').toUpperCase();
                 pokemonIdElement.textContent = `#${pokemon.pokeapi_id || 'N/A'}`;
-                pokemonImage.src = pokemon.image || '{{ asset('images/pokemon/placeholder.png') }}';
+                
+                const imageUrl = getImageUrl(pokemon, useShiny);
+                pokemonImage.src = imageUrl || '{{ asset('images/pokemon/placeholder.png') }}';
 
-                // Tipos - ahora se mostrarán dentro del contenedor de la imagen y traducidos
                 if (Array.isArray(pokemon.types) && pokemon.types.length > 0) {
                     pokemonTypesElement.innerHTML = pokemon.types.map(type => {
                         const typeInLowerCase = type.toLowerCase();
-                        const translatedType = typeTranslations[typeInLowerCase] || type; // Usar traducción o el original
+                        const translatedType = typeTranslations[typeInLowerCase] || type;
                         return `<span class="type-badge type-${typeInLowerCase}">${translatedType.toUpperCase()}</span>`;
                     }).join('');
                 } else {
@@ -301,9 +346,47 @@
                 });
             }
 
+            // Función para extraer colores y aplicar tema
+            async function extractAndApplyColors(imageUrl) {
+                try {
+                    const img = await preloadImage(imageUrl);
+                    const palette = colorThief.getPalette(img, 8);
+                    const symbolicColors = getSymbolicColors(palette, 5);
+                    applyColorTheme(symbolicColors);
+                } catch (error) {
+                    console.error('Error extracting colors:', error);
+                }
+            }
+
+            // Función para alternar entre shiny y normal
+            async function toggleShiny() {
+                if (!currentPokemon) return;
+
+                isShiny = !isShiny;
+                
+                // Actualizar texto del botón
+                shinyBtn.innerHTML = isShiny 
+                    ? '<i class="bi bi-star-fill"></i> Normal' 
+                    : '<i class="bi bi-star"></i> Shiny';
+
+                // Animación de transición
+                pokemonImage.style.transition = 'opacity 0.25s';
+                pokemonImage.style.opacity = '0';
+
+                setTimeout(async () => {
+                    // Actualizar imagen
+                    const newImageUrl = getImageUrl(currentPokemon, isShiny);
+                    pokemonImage.src = newImageUrl;
+                    
+                    // Extraer nuevos colores
+                    await extractAndApplyColors(newImageUrl);
+                    
+                    pokemonImage.style.opacity = '1';
+                }, 250);
+            }
+
             // Función principal para obtener Pokémon aleatorio
             async function fetchRandomPokemon() {
-                // Eliminar tooltip de copiar si existe
                 if (currentCopyTooltip) {
                     currentCopyTooltip.remove();
                     currentCopyTooltip = null;
@@ -313,6 +396,10 @@
                 loader.classList.remove('d-none');
                 btn.disabled = true;
                 btn.textContent = 'Generando...';
+                
+                if (shinyBtn) {
+                    shinyBtn.disabled = true;
+                }
 
                 try {
                     const type = document.getElementById('typeSelect')?.value || 'all';
@@ -331,31 +418,28 @@
                     }
 
                     const pokemon = data.data;
-                    const imageUrl = pokemon.image;
+                    currentPokemon = pokemon;
+                    
+                    isShiny = false;
+                    if (shinyBtn) {
+                        shinyBtn.innerHTML = '<i class="bi bi-star"></i> Shiny';
+                    }
+
+                    const imageUrl = getImageUrl(pokemon, false);
 
                     if (!imageUrl) {
                         throw new Error('No se encontró imagen para este Pokémon.');
                     }
 
-                    // Animación de salida
                     document.querySelectorAll('.pokemon-card').forEach(card => {
                         card.classList.add('fade-out');
                     });
 
-                    await new Promise(resolve => setTimeout(resolve, 300)); // Esperar a que la animación de salida termine
+                    await new Promise(resolve => setTimeout(resolve, 300));
 
-                    // Actualizar datos
-                    updatePokemonDetails(pokemon);
+                    updatePokemonDetails(pokemon, false);
+                    await extractAndApplyColors(imageUrl);
 
-                    // Cargar imagen y extraer colores
-                    const img = await preloadImage(imageUrl);
-                    const palette = colorThief.getPalette(img, 8);
-                    const symbolicColors = getSymbolicColors(palette, 5);
-
-                    // Aplicar tema de colores
-                    applyColorTheme(symbolicColors);
-
-                    // Animación de entrada
                     document.querySelectorAll('.pokemon-card').forEach((card, index) => {
                         card.classList.remove('fade-out');
                         card.classList.add('fade-in');
@@ -369,11 +453,45 @@
                     loader.classList.add('d-none');
                     btn.disabled = false;
                     btn.innerHTML = '<i class="bi bi-shuffle"></i> ¡Generar Pokémon!';
+                    
+                    if (shinyBtn) {
+                        shinyBtn.disabled = false;
+                    }
                 }
             }
 
-            // Configurar evento del botón
+            // Agregar event listeners para efectos hover dinámicos
+            function addHoverEffects() {
+                [btn, shinyBtn].forEach(button => {
+                    if (button) {
+                        button.addEventListener('mouseenter', function() {
+                            const hoverShadow = this.getAttribute('data-hover-shadow');
+                            if (hoverShadow) {
+                                this.style.setProperty('box-shadow', hoverShadow, 'important');
+                            }
+                        });
+                        
+                        button.addEventListener('mouseleave', function() {
+                            // Restaurar sombra original basada en los colores actuales
+                            if (currentPalette.length > 0) {
+                                const isShinyButton = this === shinyBtn;
+                                const colorIndex = isShinyButton && currentPalette.length > 1 ? 1 : 0;
+                                const originalShadow = `0 8px 25px rgba(${currentPalette[colorIndex].join(',')}, 0.3)`;
+                                this.style.setProperty('box-shadow', originalShadow, 'important');
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Configurar eventos de los botones
             btn.addEventListener('click', fetchRandomPokemon);
+            if (shinyBtn) {
+                shinyBtn.addEventListener('click', toggleShiny);
+            }
+
+            // Agregar efectos hover
+            addHoverEffects();
 
             // Cargar un Pokémon aleatorio al cargar la página
             fetchRandomPokemon();
@@ -392,6 +510,10 @@
             <button id="randomBtn">
                 <i class="bi bi-shuffle"></i>
                 ¡Generar Pokémon!
+            </button>
+            <button id="shinyBtn" style="margin-left: 10px;">
+                <i class="bi bi-star"></i>
+                Shiny
             </button>
             <div id="randomLoader" class="loader d-none mt-3">
                 <div class="spinner"></div>
@@ -454,6 +576,32 @@
             margin-bottom: 3rem;
         }
 
+        /* Estilos base para los botones (sin background fijo) */
+        #randomBtn, #shinyBtn {
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            /* Removido background fijo para permitir colores dinámicos */
+        }
+
+        #randomBtn:hover, #shinyBtn:hover {
+            transform: translateY(-2px);
+            /* box-shadow se maneja dinámicamente en JavaScript */
+        }
+
+        #randomBtn:disabled, #shinyBtn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
         .loader {
             display: flex;
             justify-content: center;
@@ -501,6 +649,20 @@
             max-width: 100%;
             min-width: 250px;
         }
+
+        .pokemon-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, var(--glow-color, rgba(102, 126, 234, 0.2)) 0%, transparent 70%);
+            opacity: 0.08;
+            z-index: -1;
+            pointer-events: none;
+        }
         
         .main-card {
             flex: 2 1 500px;
@@ -525,6 +687,22 @@
         .main-card {
             text-align: center;
             background: linear-gradient(135deg, var(--card-color-light, rgba(102, 126, 234, 0.1)) 0%, var(--card-bg) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 150%;
+            height: 150%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, var(--glow-color, rgba(102, 126, 234, 0.2)) 0%, transparent 70%);
+            opacity: 0.08;
+            z-index: -1;
+            pointer-events: none;
         }
 
         .card-header {
@@ -719,26 +897,6 @@
         @keyframes fadeOut { to { opacity: 0; transform: translateY(20px) scale(0.95); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        /* Type-specific colors */
-        .type-normal { background: linear-gradient(135deg, #a8a878, #8c8c5c) !important; color: #222 !important; }
-        .type-fuego, .type-fire { background: linear-gradient(135deg, #ef8030, #cc6600) !important; color: #fff !important; }
-        .type-agua, .type-water { background: linear-gradient(135deg, #6890f0, #3860d0) !important; color: #fff !important; }
-        .type-eléctrico, .type-electric { background: linear-gradient(135deg, #f9d030, #e6b800) !important; color: #222 !important; }
-        .type-planta, .type-grass { background: linear-gradient(135deg, #78c84f, #5a9c3c) !important; color: #222 !important; }
-        .type-hielo, .type-ice { background: linear-gradient(135deg, #99d8d8, #66bcbc) !important; color: #222 !important; }
-        .type-lucha, .type-fighting { background: linear-gradient(135deg, #c03128, #8c1f18) !important; color: #fff !important; }
-        .type-veneno, .type-poison { background: linear-gradient(135deg, #a040a0, #803080) !important; color: #fff !important; }
-        .type-tierra, .type-ground { background: linear-gradient(135deg, #e0c068, #c0a050) !important; color: #222 !important; }
-        .type-volador, .type-flying { background: linear-gradient(135deg, #a790f0, #8c78d8) !important; color: #222 !important; }
-        .type-psíquico, .type-psychic { background: linear-gradient(135deg, #f85888, #e04070) !important; color: #fff !important; }
-        .type-bicho, .type-bug { background: linear-gradient(135deg, #a8b820, #8c9c1c) !important; color: #222 !important; }
-        .type-roca, .type-rock { background: linear-gradient(135deg, #b7a039, #95822e) !important; color: #fff !important; }
-        .type-fantasma, .type-ghost { background: linear-gradient(135deg, #705898, #5a4378) !important; color: #fff !important; }
-        .type-dragón, .type-dragon { background: linear-gradient(135deg, #7038f8, #5020d0) !important; color: #fff !important; }
-        .type-siniestro, .type-dark { background: linear-gradient(135deg, #6f5848, #4c392f) !important; color: #fff !important; }
-        .type-acero, .type-steel { background: linear-gradient(135deg, #b8b8d0, #9898b0) !important; color: #222 !important; }
-        .type-hada, .type-fairy { background: linear-gradient(135deg, #f0b6bc, #e19098) !important; color: #222 !important; }
-
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .pokemon-grid {
@@ -757,6 +915,10 @@
             .types-container-overlay {
                 justify-content: center;
                 bottom: 5px;
+            }
+            #shinyBtn {
+                margin-left: 0 !important;
+                margin-top: 10px;
             }
         }
     </style>
