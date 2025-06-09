@@ -25,6 +25,11 @@ Route::get('/pokemon/random', function () {
     return view('pokemon.random');
 })->name('pokemon.random');
 
+// Ruta para la página de colores
+Route::get('/pokemon/color', function () {
+    return view('pokemon.color');
+})->name('pokemon.color');
+
 // Detalle de Pokémon (ruta dinámica, debe ir después)
 Route::get('/pokemon/{nameOrId}', [PokemonController::class, 'showPokemon'])
     ->name('pokemon.show')
@@ -74,59 +79,8 @@ Route::prefix('api')->group(function () {
     // Buscar Pokémon
     Route::get('/pokemon/buscar', [PokemonController::class, 'buscar'])->name('pokemon.buscar');
 
-    // Pokémon aleatorio con filtros y cantidad
-    Route::get('/random-pokemon', function (\Illuminate\Http\Request $request) {
-        $type = $request->input('type', 'all');
-        $eggGroup = $request->input('egg_group', 'all');
-        $qty = max(1, min((int)$request->input('qty', 1), 6)); // De 1 a 6
-
-        $query = \App\Models\Pokemon::query()->where('pokeapi_id', '<=', 1025);
-
-        if ($type !== 'all' && !empty($type)) {
-            $query->whereJsonContains('types', $type);
-        }
-        if ($eggGroup !== 'all' && !empty($eggGroup)) {
-            $query->whereJsonContains('egg_groups', $eggGroup);
-        }
-
-        $count = $query->count();
-        if ($count === 0) {
-            return response()->json(['success' => false, 'message' => 'No hay Pokémon con esos filtros']);
-        }
-
-        $offsets = [];
-        if ($qty >= $count) {
-            $offsets = range(0, $count - 1);
-            shuffle($offsets);
-            $offsets = array_slice($offsets, 0, $qty);
-        } else {
-            while (count($offsets) < $qty) {
-                $rand = rand(0, $count - 1);
-                if (!in_array($rand, $offsets)) {
-                    $offsets[] = $rand;
-                }
-            }
-        }
-
-        $pokemons = [];
-        foreach ($offsets as $offset) {
-            $pokemon = (clone $query)->skip($offset)->first();
-            if ($pokemon) {
-                $pokemons[] = [
-                    'id' => $pokemon->pokeapi_id,
-                    'display_name' => ucwords(str_replace('-', ' ', $pokemon->name)),
-                    'image' => $pokemon->image,
-                    'types' => $pokemon->types,
-                    'description' => $pokemon->description,
-                ];
-            }
-        }
-
-        return response()->json([
-            'success' => true,
-            'data' => $pokemons,
-        ]);
-    });
+    // Pokémon aleatorio - ESTA ES LA RUTA QUE USA TU BLADE
+    Route::get('/random-pokemon', [PokemonController::class, 'randomPokemon']);
 });
 
 /*
