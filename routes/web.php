@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PokemonController;
 use App\Http\Controllers\ProfileController;
-// Asegúrate de que este controlador exista y tenga el namespace correcto
+use App\Http\Controllers\NicknameController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 
 /*
@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 |--------------------------------------------------------------------------
 */
 
+// Página principal
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -19,24 +20,49 @@ Route::get('/', function () {
 // Pokédex
 Route::get('/pokedex', [PokemonController::class, 'pokedex'])->name('pokedex.index');
 
-// Página de Pokémon aleatorio (debe ir ANTES de la ruta dinámica)
+// Pokémon aleatorio (antes de la ruta dinámica)
 Route::get('/pokemon/random', function () {
     return view('pokemon.random');
 })->name('pokemon.random');
 
-// Detalle de Pokémon (debe ir después)
+// Detalle de Pokémon (ruta dinámica, debe ir después)
 Route::get('/pokemon/{nameOrId}', [PokemonController::class, 'showPokemon'])
     ->name('pokemon.show')
     ->where('nameOrId', '[a-zA-Z\-]+|\d+');
 
-// Perfil de usuario
-Route::get('/profile', [ProfileController::class, 'show'])
-    ->middleware('auth')
-    ->name('profile.show');
+/*
+|--------------------------------------------------------------------------
+| Rutas autenticadas para perfil y motes
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth')->group(function () {
+    // Perfil de usuario - edición y gestión
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Mostrar perfil (se puede acceder dentro del middleware)
+    Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
+
+    // Motes
+    Route::post('/pokemon/{pokemon}/nickname', [NicknameController::class, 'store'])->name('nickname.store');
+    Route::delete('/nickname/{nickname}', [NicknameController::class, 'destroy'])->name('nickname.destroy');
+});
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| Dashboard (Breeze)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+/*
+|--------------------------------------------------------------------------
+| API Routes (prefijo /api)
 |--------------------------------------------------------------------------
 */
 
@@ -48,11 +74,11 @@ Route::prefix('api')->group(function () {
     // Buscar Pokémon
     Route::get('/pokemon/buscar', [PokemonController::class, 'buscar'])->name('pokemon.buscar');
 
-    // API: Pokémon aleatorio con filtros y cantidad
+    // Pokémon aleatorio con filtros y cantidad
     Route::get('/random-pokemon', function (\Illuminate\Http\Request $request) {
         $type = $request->input('type', 'all');
         $eggGroup = $request->input('egg_group', 'all');
-        $qty = max(1, min((int)$request->input('qty', 1), 6)); // Solo permite de 1 a 6
+        $qty = max(1, min((int)$request->input('qty', 1), 6)); // De 1 a 6
 
         $query = \App\Models\Pokemon::query()->where('pokeapi_id', '<=', 1025);
 
@@ -68,7 +94,6 @@ Route::prefix('api')->group(function () {
             return response()->json(['success' => false, 'message' => 'No hay Pokémon con esos filtros']);
         }
 
-        // Obtener IDs aleatorios únicos
         $offsets = [];
         if ($qty >= $count) {
             $offsets = range(0, $count - 1);
@@ -77,7 +102,9 @@ Route::prefix('api')->group(function () {
         } else {
             while (count($offsets) < $qty) {
                 $rand = rand(0, $count - 1);
-                if (!in_array($rand, $offsets)) $offsets[] = $rand;
+                if (!in_array($rand, $offsets)) {
+                    $offsets[] = $rand;
+                }
             }
         }
 
@@ -102,30 +129,19 @@ Route::prefix('api')->group(function () {
     });
 });
 
-// Rutas de autenticación de Breeze
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
-});
-
-require __DIR__.'/auth.php';
-
 /*
 |--------------------------------------------------------------------------
-| Admin Routes (Protección directamente en el controlador)
+| Rutas admin (con middleware auth y prefijo /admin)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // Rutas para gestión de usuarios
+    // Gestión de usuarios
     Route::get('/users/{user}/edit', [AdminDashboardController::class, 'editUser'])->name('users.edit');
     Route::patch('/users/{user}', [AdminDashboardController::class, 'updateUser'])->name('users.update');
     Route::delete('/users/{user}', [AdminDashboardController::class, 'deleteUser'])->name('users.destroy');
 });
+
+require __DIR__.'/auth.php';
