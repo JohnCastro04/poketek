@@ -27,11 +27,10 @@
                 const eggGroup = eggGroupSelect.value;
                 const qty = qtySelect.value;
 
-                fetch(`{{ url('/api/random-pokemon') }}?type=${encodeURIComponent(type)}&egg_group=${encodeURIComponent(eggGroup)}&qty=${qty}`)
+                // *** CAMBIO CLAVE AQUÍ: APUNTAR A LA NUEVA RUTA '/api/random-pokemons' ***
+                fetch(`{{ url('/api/random-pokemons') }}?type=${encodeURIComponent(type)}&egg_group=${encodeURIComponent(eggGroup)}&qty=${qty}`)
                     .then(res => {
-                        // Comprobación de que la respuesta es OK (status 200)
                         if (!res.ok) {
-                            // Si la respuesta no es OK, lanza un error para que lo capture el .catch()
                             throw new Error(`HTTP error! status: ${res.status}`);
                         }
                         return res.json();
@@ -39,16 +38,13 @@
                     .then(data => {
                         loader.classList.add('d-none');
 
-                        // *** Diagnóstico: Muestra la respuesta completa de la API ***
                         console.log('Respuesta de la API:', data);
 
+                        // La respuesta 'data.data' ahora es un array de Pokémon
                         if (data.success && data.data && data.data.length > 0) {
                             let cardsHtml = '';
-                            data.data.forEach((p, index) => {
-                                // Probabilidad shiny: 1/50
-                                const isShiny = Math.random() < (1 / 20);
-
-                                // Recupera la imagen normal y modifica la ruta si es shiny
+                            data.data.forEach((p, index) => { // Itera sobre el array
+                                const isShiny = Math.random() < (1 / 20); // Probabilidad shiny: 1/20
                                 let imgUrl = p.image || '';
                                 if (isShiny && imgUrl.includes('/official-artwork/')) {
                                     imgUrl = imgUrl.replace('/official-artwork/', '/official-artwork/shiny/');
@@ -60,13 +56,13 @@
                                 cardsHtml += `
                                 <div class="card mx-auto bento-card mb-3 random-pokemon-card${isShiny ? ' ultra-shiny-glow' : ''}" style="cursor:pointer; animation-delay: ${cardDelay};">
                                     ${isShiny ? `<span class="ultra-shiny-star" title="¡Shiny!">★</span>` : ''}
-                                    <span class="badge bg-secondary">#${String(p.id || '0000').padStart(4, '0')}</span>
+                                    <span class="badge bg-secondary">#${String(p.pokeapi_id || '0000').padStart(4, '0')}</span>
                                     <div class="pokemon-img-container d-flex justify-content-center align-items-center">
                                         <img src="${imgUrl}"
-                                             alt="${p.display_name || 'Pokémon'}"
-                                             class="pokemon-image img-fluid"
-                                             style="animation: pokemon-pop 0.6s ease-out forwards; animation-delay: ${delay};"
-                                             onerror="this.onerror=null;this.src='{{ asset('images/pokemon/placeholder.png') }}';">
+                                            alt="${p.display_name || 'Pokémon'}"
+                                            class="pokemon-image img-fluid"
+                                            style="animation: pokemon-pop 0.6s ease-out forwards; animation-delay: ${delay};"
+                                            onerror="this.onerror=null;this.src='{{ asset('images/pokemon/placeholder.png') }}';">
                                     </div>
                                     <div class="card-body text-center">
                                         <h3 class="fw-bold mb-1${isShiny ? ' golden-text' : ''}">
@@ -79,7 +75,7 @@
                                                 return `<span class="type-badge ${key} mx-1">${label}</span>`;
                                             }).join('')}
                                         </div>
-                                        <a href="/pokemon/${p.id || '#'}" class="btn btn-primary mt-2">Ver detalles</a>
+                                        <a href="/pokemon/${p.pokeapi_id || '#'}" class="btn btn-primary mt-2">Ver detalles</a>
                                     </div>
                                 </div>`;
                             });
@@ -93,11 +89,9 @@
                                 }
                                 result.classList.add('random');
 
-                                // --- REINICIAR ANIMACIÓN BOUNCE EN HOVER ---
                                 document.querySelectorAll('.random-pokemon-card img.pokemon-image').forEach(img => {
                                     img.addEventListener('mouseenter', function () {
                                         this.style.animation = 'none';
-                                        // Forzar reflow
                                         void this.offsetWidth;
                                         this.style.animation = '';
                                     });
@@ -117,6 +111,8 @@
             }
 
             btn.addEventListener('click', fetchRandomPokemon);
+            // Si quieres que genere Pokémon al cargar la página:
+            // fetchRandomPokemon();
         });
     </script>
 @endpush

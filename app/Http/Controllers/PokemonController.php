@@ -90,7 +90,7 @@ class PokemonController extends Controller
 
         if (!$pokemon) {
             return response()->json([
-                'success' => false, 
+                'success' => false,
                 'message' => 'No se encontraron Pokémon con los filtros aplicados'
             ], 404);
         }
@@ -113,6 +113,68 @@ class PokemonController extends Controller
         return response()->json([
             'success' => true,
             'data' => $pokemonData
+        ]);
+    }
+
+    /**
+     * Retorna múltiples Pokémon aleatorios con todos sus datos, basados en filtros.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function randomPokemons(Request $request) // Nuevo método
+    {
+        $type = $request->input('type', 'all');
+        $eggGroup = $request->input('egg_group', 'all');
+        $qty = (int) $request->input('qty', 1); // Cantidad de Pokémon a retornar
+
+        // Asegurarse de que la cantidad sea al menos 1
+        $qty = max(1, $qty);
+
+        $query = Pokemon::query();
+
+        // Aplicar filtros si existen
+        if ($type !== 'all' && !empty($type)) {
+            $query->whereJsonContains('types', $type);
+        }
+
+        if ($eggGroup !== 'all' && !empty($eggGroup)) {
+            $query->whereJsonContains('egg_groups', $eggGroup);
+        }
+
+        // Limitar a la primera generación
+        $query->where('pokeapi_id', '<=', 1025);
+
+        // Obtener Pokémon aleatorios
+        $pokemons = $query->inRandomOrder()->take($qty)->get();
+
+        if ($pokemons->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se encontraron Pokémon con los filtros aplicados'
+            ], 404);
+        }
+
+        // Formatear los datos para la respuesta
+        $formattedPokemons = $pokemons->map(function ($pokemon) {
+            return [
+                'pokeapi_id' => $pokemon->pokeapi_id,
+                'name' => $pokemon->name,
+                'display_name' => ucwords(str_replace('-', ' ', $pokemon->name)),
+                'description' => $pokemon->description ?? 'Descripción no disponible',
+                'types' => $pokemon->types ?? [],
+                'egg_groups' => $pokemon->egg_groups ?? [],
+                'stats' => $pokemon->stats ?? [],
+                'abilities' => $pokemon->abilities ?? [],
+                'image' => $pokemon->image,
+                'height' => $pokemon->height ?? null,
+                'weight' => $pokemon->weight ?? null,
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $formattedPokemons
         ]);
     }
 
@@ -218,4 +280,5 @@ class PokemonController extends Controller
             'count' => $results->count(),
         ]);
     }
+
 }

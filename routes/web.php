@@ -79,8 +79,11 @@ Route::prefix('api')->group(function () {
     // Buscar Pokémon
     Route::get('/pokemon/buscar', [PokemonController::class, 'buscar'])->name('pokemon.buscar');
 
-    // Pokémon aleatorio - ESTA ES LA RUTA QUE USA TU BLADE
+    // Pokémon aleatorio (singular)
     Route::get('/random-pokemon', [PokemonController::class, 'randomPokemon']);
+
+    // Pokémon aleatorios (múltiples) - AHORA DENTRO DEL PREFIJO 'api'
+    Route::get('/random-pokemons', [PokemonController::class, 'randomPokemons']);
 });
 
 /*
