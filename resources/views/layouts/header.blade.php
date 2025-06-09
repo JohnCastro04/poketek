@@ -5,13 +5,10 @@
             <ul class="d-flex align-items-center justify-content-between list-unstyled mb-0" style="width: 100%;">
                 {{-- Menú lateral --}}
                 <li class="d-flex align-items-center justify-content-start" style="min-width: 160px;">
-                    <button class="btn p-0 border-0 bg-transparent" id="sidenavToggle" aria-label="Abrir menú lateral"
+                    <a class="border-0 bg-transparent" id="sidenavToggle" aria-label="Abrir menú lateral"
                         style="color: var(--golden-bloom);">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3 7h18M3 12h18M3 17h18" />
-                        </svg>
-                    </button>
+                        <i class="bi bi-list" style="font-size: 32px;"></i>
+                    </a>
                 </li>
 
                 {{-- Logo centrado --}}

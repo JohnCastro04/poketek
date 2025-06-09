@@ -28,3 +28,7 @@
 .text-danger {
         color: #FF6B6B !important;
     }
+
+.dropdown-item:hover {
+    background-color: var(--midnight-steel-light);
+}

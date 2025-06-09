@@ -17,8 +17,24 @@ class PasswordController extends Controller
     {
         $validated = $request->validateWithBag('updatePassword', [
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
+            'password' => [
+                'required',
+                'confirmed',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/'
+            ],
+        ], [
+            // Mensajes para la contraseña actual
+            'current_password.required' => 'Por favor, introduce tu contraseña actual para continuar.',
+            'current_password.current_password' => 'La contraseña actual introducida no es correcta. Inténtalo de nuevo.',
+
+            // Mensajes para la nueva contraseña
+            'password.required' => 'Por favor, introduce una nueva contraseña.',
+            'password.confirmed' => 'La confirmación de la nueva contraseña no coincide. Vuelve a introducirla.',
+            'password.min' => 'La nueva contraseña debe tener al menos 8 caracteres.',
+            'password.regex' => 'La nueva contraseña debe incluir al menos una letra mayúscula, una minúscula, un número y un carácter especial (@$!%*?&).',
         ]);
+
 
         $request->user()->update([
             'password' => Hash::make($validated['password']),

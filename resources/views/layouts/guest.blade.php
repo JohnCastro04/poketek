@@ -29,7 +29,7 @@
             <div class="container pokemon-detail-container">
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                        <div class="p-4">
+                        <div class="p-6">
                             {{ $slot }}
                         </div>
                     </div>
