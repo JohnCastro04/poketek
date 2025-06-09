@@ -14,7 +14,19 @@
             <div class="form-group mb-3"> {{-- Añadido mb-3 para consistencia --}}
                 <x-input-label for="email" :value="__('Email')" class="form-label" />
                 <x-text-input id="email" class="form-control" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="tu.email@ejemplo.com" />
-                <x-input-error :messages="$errors->get('email')" class="form-error" />
+                
+                @if ($errors->get('email'))
+                    <div class="error-container mt-2">
+                        @foreach ((array) $errors->get('email') as $message)
+                            <div class="error-message">
+                                <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span class="error-text">{{ $message }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
             </div>
 
             {{-- Password --}}
@@ -24,7 +36,17 @@
                                 type="password"
                                 name="password"
                                 required autocomplete="current-password" placeholder="Ingresa tu contraseña" />
-                <x-input-error :messages="$errors->get('password')" class="form-error" />
+                
+                @if ($errors->get('password'))
+                    <div class="error-container mt-2">
+                        @foreach ((array) $errors->get('password') as $message)
+                            <div class="error-message">
+                                <i class="bi bi-exclamation-diamond error-icon"></i>
+                                <span class="error-text">{{ $message }}</span>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
             </div>
 
             {{-- Remember Me --}}
