@@ -39,7 +39,7 @@
                             </div>
                             <div class="mb-4 text-end">
                                 <button class="btn btn-primary px-4 py-2" type="submit">
-                                    <i class="bi bi-save me-2"></i>Guardar cambios
+                                    <i class="bi bi-bookmark-fill"></i>Guardar cambios
                                 </button>
                             </div>
                         </form>

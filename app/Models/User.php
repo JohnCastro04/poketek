@@ -57,12 +57,9 @@ class User extends Authenticatable
         return asset("images/profile/{$this->profile_picture}.png");
     }
 
-    /**
-     * Get available profile pictures (1-20 por ejemplo)
-     */
     public static function getAvailableProfilePictures(): array
     {
-        return range(1, 20); // Ajusta según cuántas imágenes tengas
+        return range(1, 30);
     }
 
     /**
@@ -70,7 +67,7 @@ class User extends Authenticatable
      */
     public function assignRandomProfilePicture(): void
     {
-        $this->profile_picture = rand(1, 20); // Ajusta según cuántas imágenes tengas
+        $this->profile_picture = rand(1, 30); // Ajusta según cuántas imágenes tengas
         $this->save();
     }
 }
