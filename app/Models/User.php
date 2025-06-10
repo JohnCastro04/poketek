@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'permission',
+        'profile_picture',
     ];
 
     /**
@@ -46,5 +47,30 @@ class User extends Authenticatable
             'password' => 'hashed',
             'permission' => 'boolean', 
         ];
+    }
+
+    /**
+     * Get the profile picture URL
+     */
+    public function getProfilePictureUrlAttribute(): string
+    {
+        return asset("images/profile/{$this->profile_picture}.png");
+    }
+
+    /**
+     * Get available profile pictures (1-20 por ejemplo)
+     */
+    public static function getAvailableProfilePictures(): array
+    {
+        return range(1, 20); // Ajusta según cuántas imágenes tengas
+    }
+
+    /**
+     * Assign random profile picture
+     */
+    public function assignRandomProfilePicture(): void
+    {
+        $this->profile_picture = rand(1, 20); // Ajusta según cuántas imágenes tengas
+        $this->save();
     }
 }

@@ -25,6 +25,7 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'profile_picture' => ['sometimes', 'integer', 'min:1', 'max:20'], // Ajusta según tus imágenes
         ];
     }
 }

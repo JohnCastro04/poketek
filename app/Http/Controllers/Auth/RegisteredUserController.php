@@ -63,6 +63,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'profile_picture' => rand(1, 20), // Asignar foto aleatoria
         ]);
 
         event(new Registered($user));
