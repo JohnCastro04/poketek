@@ -45,7 +45,7 @@ class ProfileController extends Controller
     public function updateProfilePicture(Request $request): RedirectResponse
     {
         $request->validate([
-            'profile_picture' => ['required', 'integer', 'min:1', 'max:20'], // Ajusta según tus imágenes
+            'profile_picture' => ['required', 'integer', 'min:1', 'max:30'], 
         ]);
 
         $request->user()->update([

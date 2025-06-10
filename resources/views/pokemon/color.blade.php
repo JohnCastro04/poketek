@@ -549,23 +549,6 @@
 
 @push('styles')
     <style>
-        :root {
-            --primary-bg: #0a0e1a;
-            --secondary-bg: #1a1f2e;
-            --card-bg: #252b3d;
-            --text-primary: #ffffff;
-            --text-secondary: #b8c5d6;
-            --border-color: #2d3748;
-            --shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            --border-radius: 16px;
-            --success-color: #4ade80;
-        }
-
-        body {
-            color: var(--text-primary);
-            font-family: 'Josefin Sans', sans-serif;
-        }
-
         .pokemon-dashboard {
             margin: 0 auto;
             max-width: 1400px;
@@ -588,12 +571,10 @@
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            /* Removido background fijo para permitir colores dinámicos */
         }
 
         #randomBtn:hover, #shinyBtn:hover {
             transform: translateY(-2px);
-            /* box-shadow se maneja dinámicamente en JavaScript */
         }
 
         #randomBtn:disabled, #shinyBtn:disabled {
@@ -800,8 +781,7 @@
             transform: scale(1.1);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
         }
-
-        /* Estilos actualizados para el tooltip */
+        
         .color-copy-tooltip {
             position: absolute;
             background-color: rgba(10, 14, 26, 0.98);

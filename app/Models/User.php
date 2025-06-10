@@ -49,9 +49,6 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Get the profile picture URL
-     */
     public function getProfilePictureUrlAttribute(): string
     {
         return asset("images/profile/{$this->profile_picture}.png");
@@ -62,12 +59,10 @@ class User extends Authenticatable
         return range(1, 30);
     }
 
-    /**
-     * Assign random profile picture
-     */
+
     public function assignRandomProfilePicture(): void
     {
-        $this->profile_picture = rand(1, 30); // Ajusta según cuántas imágenes tengas
+        $this->profile_picture = rand(1, 30); 
         $this->save();
     }
 }

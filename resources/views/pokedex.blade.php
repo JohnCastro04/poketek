@@ -58,8 +58,7 @@
             </div>
         </div>
 
-        <div class="row g-5" id="pokemonGrid">
-            {{-- Mostramos solo los Pokémon de la página actual --}}
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 row-cols-xxl-8 g-3 g-md-4" id="pokemonGrid">
             @forelse ($pokemons as $pokemon)
                 @php
                     $pokemonId = $pokemon->pokeapi_id;
@@ -69,7 +68,7 @@
                     $eggGroups = $pokemon->egg_groups;
                 @endphp
 
-                <div class="col-6 col-sm-4 col-md-3 col-lg-2 pokemon-item"
+                <div class="col pokemon-item"
                     data-id="{{ $pokemonId }}"
                     data-name="{{ $pokemon->name }}"
                     data-types="{{ json_encode($types) }}"
