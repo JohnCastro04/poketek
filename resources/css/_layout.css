@@ -1,57 +1,44 @@
 /*
 ==============================
-== 📐 GLOBAL / LAYOUT =================
+== 📐 GLOBAL / LAYOUT
 ==============================
 */
-
 html {
-    height: 100%; /* Asegura que HTML ocupe toda la altura */
+    height: 100%;
 }
 
 body {
-    display: flex; /* Convierte el body en un contenedor flex */
-    flex-direction: column; /* Apila los hijos verticalmente */
-    min-height: 100vh; /* Asegura que el body siempre ocupe al menos el 100% de la altura del viewport */
-    margin: 0; /* Elimina el margen por defecto del body */
-    /* Añade aquí cualquier otro estilo global para el body */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
 }
 
-/*
-==============================
-== 💻 CONTENIDO PRINCIPAL (usando la etiqueta <main>) =================
-==============================
-*/
-/* Esto es clave para que el contenido principal ocupe el espacio disponible y empuje el footer */
 main {
-    flex-grow: 1; /* Hace que el contenido principal se expanda para llenar el espacio disponible */
-    /* Ajusta este padding-top para que sea igual o mayor que la altura de tu header fijo. */
-    /* Añade un padding-bottom para asegurar espacio entre el contenido y el footer */
-    padding-bottom: 3rem; /* Puedes ajustar este valor según el espacio deseado */
-    box-sizing: border-box; /* Incluye el padding en el cálculo total de altura y ancho */
-    /* Añade aquí cualquier otro padding o margin que necesites para tu contenido principal */
+    flex-grow: 1;
+    padding-bottom: 3rem;
+    box-sizing: border-box;
 }
-
 
 /*
 ==============================
-== 🧭 HEADER =================
+== 🧭 HEADER
 ==============================
 */
-
 header {
     background: rgba(18, 22, 33, 0.85);
     color: var(--golden-bloom);
-    position: fixed; /* Mantiene el header fijo en la parte superior */
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100vw; /* SOLO CAMBIO: 100% -> 100vw */
+    max-width: 100vw; /* AÑADIDO: limitar ancho máximo */
     z-index: 1050;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
     transition: background 0.3s;
     min-height: 70px;
-    /* Las propiedades margin-bottom y padding-bottom ya no son necesarias aquí debido al layout flex */
 }
 
 header::after {
@@ -68,13 +55,8 @@ header::after {
 }
 
 @keyframes headerGlowBar {
-    0%,
-    100% {
-        opacity: 0.4;
-    }
-    50% {
-        opacity: 1;
-    }
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
 }
 
 .header-section,
@@ -87,10 +69,15 @@ header::after {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     position: relative;
     overflow: hidden;
+    width: 100%; /* Asegura que ocupe todo el ancho */
+    left: 0;
+    right: 0;
 }
+
 header img {
     transition: transform 0.2s;
 }
+
 header img:hover {
     transform: scale(1.08);
     cursor: pointer;
@@ -98,11 +85,9 @@ header img:hover {
 
 /*
 ==============================
-== Sidenav =================
+== Sidenav
 ==============================
 */
-
-/* Estilos Base para el Sidenav */
 .sidenav {
     height: 100%;
     width: 0;
@@ -118,7 +103,6 @@ header img:hover {
     box-shadow: 3px 0 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Estilos para los enlaces del Sidenav */
 .sidenav a {
     padding: 10px 15px 10px 32px;
     text-decoration: none;
@@ -135,13 +119,11 @@ header img:hover {
     border-bottom: none;
 }
 
-/* Hover para los enlaces */
 .sidenav a:hover {
     color: #ffffff;
     background-color: var(--midnight-abyss-light);
 }
 
-/* Botón de cerrar */
 .sidenav .closebtn {
     position: absolute;
     top: 15px;
@@ -158,12 +140,10 @@ header img:hover {
     background-color: transparent;
 }
 
-/* Clase para abrir el Sidenav (se añade/quita con JS) */
 .sidenav.open {
     width: 280px;
 }
 
-/* Opcional: Overlay oscuro cuando el Sidenav está abierto */
 #sidenavOverlay {
     position: fixed;
     top: 0;
@@ -182,42 +162,26 @@ header img:hover {
     opacity: 1;
 }
 
-@media (max-width: 480px) {
-    header .d-flex li {
-        min-width: auto !important;
-    }
-    .login-text,
-    .user-name {
-        display: none;
-    }
-    header .btn,
-    header .dropdown-toggle {
-        padding: 5px 8px;
-    }
-    header .dropdown-toggle img {
-        margin-right: 0 !important;
-    }
-}
-
 /*
 ==============================
-== 📢 FOOTER =================
+== 📢 FOOTER
 ==============================
 */
-
 footer,
-.footer { /* Mantengo .footer por si lo usas en algún lugar heredado */
+.footer {
     background: linear-gradient(90deg, var(--midnight-abyss) 60%, var(--midnight-steel) 100%);
     color: rgba(255, 255, 255, 0.85);
     font-family: var(--font-text);
     font-size: 1rem;
-    /* Ajusta este padding-top para el espacio superior dentro del footer */
-    padding: 3rem 0 1.2rem 0; /* Aumentado el padding-top a 3rem para el margen visual */
-    margin-top: auto; /* Esto es lo que empuja el footer al final en un layout flex-column */
+    padding: 3rem 0 1.2rem 0;
+    margin-top: auto;
     border-top: 2px solid var(--golden-bloom);
     box-shadow: 0 -4px 24px rgba(44, 56, 80, 0.12);
     text-align: center;
     letter-spacing: 0.2px;
+    width: 100%; /* Asegura que ocupe todo el ancho */
+    left: 0;
+    right: 0;
 }
 
 footer .container,
@@ -252,14 +216,36 @@ footer a:hover,
     text-decoration: underline;
 }
 
+/* Media Queries */
 @media (max-width: 600px) {
     footer,
     .footer {
         font-size: 0.95rem;
         padding: 1.2rem 0 0.7rem 0;
     }
+    
     footer .container,
     .footer .container {
         padding: 0 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header .d-flex li {
+        min-width: auto !important;
+    }
+    
+    .login-text,
+    .user-name {
+        display: none;
+    }
+    
+    header .btn,
+    header .dropdown-toggle {
+        padding: 5px 8px;
+    }
+    
+    header .dropdown-toggle img {
+        margin-right: 0 !important;
     }
 }

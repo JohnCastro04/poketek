@@ -246,6 +246,14 @@
                 margin-right: 0.5rem;
             }
         }
+
+        .bi::before, [class*=" bi-"]::before, [class^=bi-]::before {
+            vertical-align: -30% !important;
+        }
+
+        .row {
+            align-items: center;
+        }
     </style>
 @endpush
 

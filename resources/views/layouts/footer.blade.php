@@ -8,7 +8,7 @@
     <div class="modal-overlay" id="modalOverlay">
         <div class="author-modal">
             <a href="javascript:void(0)" class="closebtn" id="closeModal">&times;</a>
-            <img src="{{ asset('images/profile/1.png') }}" alt="John Castro" class="author-image">
+            <img src="{{ asset('images/rk_profile.jpg') }}" alt="John Castro" class="author-image">
             <h3>John Castro</h3>
             <p>Desarrollador Web Full Stack</p>
             <div class="social-links">
@@ -65,8 +65,9 @@
     }
     
     .author-image {
-        width: 100px;
-        height: 100px;
+        width: 150px;
+        height: auto;
+        aspect-ratio: 1 / 1;
         border-radius: 50%;
         border: 3px solid var(--golden-bloom);
         margin-bottom: 1rem;
