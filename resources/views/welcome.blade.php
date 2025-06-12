@@ -20,7 +20,7 @@
                             <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/479.png" alt="Rotom" class="pokemon-card-img">
                         </div>
                         <div class="divider"></div>
-                        <h3 class="card-title mt-3">Explorar la Pokédex</h3>
+                        <h3 class="card-title mt-3">Pokédex</h3>
                         <p class="description-card">Descubre una extensa base de datos con detalles de cada Pokémon, incluyendo tipos, habilidades y estadísticas.</p>
                     </div>
                 </a>
@@ -48,8 +48,8 @@
                             <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/235.png" alt="Smeargle" class="pokemon-card-img">
                         </div>
                         <div class="divider"></div>
-                        <h3 class="card-title mt-3">Pokémon por Color</h3>
-                        <p class="description-card">Explora Pokémon agrupados por sus vibrantes colores para facilitar la búsqueda y el descubrimiento visual.</p>
+                        <h3 class="card-title mt-3">Paletas de Color</h3>
+                        <p class="description-card">Descubre paletas inspiradas en los colores de los Pokémon y disfruta de combinaciones únicas.</p>
                     </div>
                 </a>
             </div>
@@ -183,7 +183,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const pokemonCardImages = document.querySelectorAll('.pokemon-card-img');
             pokemonCardImages.forEach(img => {
-                img.classList.add('loaded'); // Asegura que la imagen sea visible inmediatamente
+                img.classList.add('loaded'); 
             });
         });
     </script>

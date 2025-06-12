@@ -38,9 +38,7 @@
                                 @enderror
                             </div>
                             <div class="mb-4 text-end">
-                                <button class="btn btn-primary px-4 py-2" type="submit">
-                                    <i class="bi bi-bookmark-fill"></i>Guardar cambios
-                                </button>
+                                <button class="btn btn-primary px-4 py-2" type="submit">Guardar cambios</button>
                             </div>
                         </form>
                     </div>
@@ -85,9 +83,7 @@
                                 @enderror
                             </div>
                             <div class="mb-4 text-end">
-                                <button class="btn btn-primary px-4 py-2" type="submit">
-                                    <i class="bi bi-key me-2"></i>Guardar contraseña
-                                </button>
+                                <button class="btn btn-primary px-4 py-2" type="submit">Guardar contraseña</button>
                             </div>
                         </form>
                     </div>
@@ -157,9 +153,7 @@
                                     @enderror
 
                                     <div class="text-end mt-4">
-                                        <button class="btn btn-primary px-4 py-2 btn-save-profile" type="submit">
-                                            <i class="bi bi-image me-2"></i>Cambiar foto
-                                        </button>
+                                        <button class="btn btn-primary px-4 py-2 btn-save-profile" type="submit">Cambiar foto</button>
                                     </div>
                                 </form>
                             </div>
@@ -186,9 +180,7 @@
                                 @enderror
                             </div>
                             <div class="mb-4">
-                                <button class="btn btn-danger px-4 py-2 w-100" type="submit">
-                                    <i class="bi bi-trash me-2"></i>Eliminar cuenta
-                                </button>
+                                <button class="btn btn-danger px-4 py-2 w-100" type="submit">Eliminar cuenta</button>
                             </div>
                         </form>
                     </div>
