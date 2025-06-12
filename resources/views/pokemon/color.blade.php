@@ -528,7 +528,7 @@
                 </div>
                 <div class="pokemon-image-container">
                     <img id="pokemonImage" crossorigin="anonymous" class="pokemon-image img-fluid" alt="Pokémon"
-                        onerror="this.onerror=null;this.src='{{ asset('images/pokemon/placeholder.png') }}';">
+                        onerror="this.onerror=null;this.src='{{ asset('images/default-user.png') }}';">
                     <div id="pokemon-types" class="types-container-overlay"></div>
                 </div>
             </div>
