@@ -12,10 +12,8 @@ use Illuminate\Support\Facades\Cache;
 class PokemonController extends Controller
 {
     public const PER_PAGE = 24;
+    public const MAX_POKEAPI_ID = 1025;
 
-    /**
-     * Muestra la página principal del Pokédex con filtros y paginación.
-     */
     public function pokedex(Request $request)
     {
         $query = Pokemon::query();
@@ -60,12 +58,6 @@ class PokemonController extends Controller
         ]);
     }
 
-    /**
-     * Retorna un Pokémon aleatorio con todos sus datos.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function randomPokemon(Request $request)
     {
         $type = $request->input('type', 'all');
@@ -178,68 +170,38 @@ class PokemonController extends Controller
         ]);
     }
 
-    /**
-     * Encuentra un Pokémon en la base de datos local por pokeapi_id o nombre.
-     */
-    private function findPokemon($identifier): Pokemon
-    {
-        if (is_numeric($identifier)) {
-            return Pokemon::where('pokeapi_id', (int) $identifier)->firstOrFail();
-        }
-        return Pokemon::where('name', strtolower($identifier))->firstOrFail();
-    }
-
-    /**
-     * Muestra la página de detalles de un Pokémon.
-     */
     public function showPokemon($identifier)
     {
-        $localPokemon = $this->findPokemon($identifier);
-
-        $pokemonViewData = [
-            'id' => $localPokemon->pokeapi_id,
-            'name' => $localPokemon->name,
-            'display_name' => str_replace('-', ' ', ucfirst($localPokemon->name)),
-            'description' => $localPokemon->description,
-            'types' => $localPokemon->types,
-            'egg_groups' => $localPokemon->egg_groups,
-            'stats' => $localPokemon->stats,
-            'abilities' => $localPokemon->abilities,
-            'image' => $localPokemon->image,
-        ];
-
-        $userNicknames = collect();
-        if (Auth::check()) {
-            $userNicknames = $localPokemon->nicknames()
-                ->where('user_id', Auth::id())
-                ->orderBy('created_at', 'desc')
-                ->get();
+        try {
+            $localPokemon = $this->findPokemon($identifier);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException) {
+            return redirect()->route('pokedex.index')->with('error', 'Pokémon no encontrado.');
         }
 
+        $userNicknames = Auth::check()
+            ? $localPokemon->nicknames()->where('user_id', Auth::id())->orderByDesc('created_at')->get()
+            : collect();
+
         return view('pokemon.show', [
-            'pokemon' => $pokemonViewData,
+            'pokemon' => $this->formatPokemonData($localPokemon),
             'localPokemonId' => $localPokemon->id,
             'userNicknames' => $userNicknames,
         ]);
     }
 
-    /**
-     * Endpoint API para obtener un Pokémon por ID o nombre.
-     */
-    public function getPokemon($id)
+    public function getPokemon($identifier)
     {
-        $pokemon = Pokemon::where('pokeapi_id', $id)->orWhere('name', $id)->first();
-
-        if (!$pokemon) {
+        try {
+            $pokemon = $this->findPokemon($identifier);
+            return response()->json(['success' => true, 'data' => $this->formatPokemonData($pokemon)]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException) {
             return response()->json(['success' => false, 'message' => 'Pokémon no encontrado'], 404);
+        } catch (\Exception $e) {
+            Log::error("Error en getPokemon: {$e->getMessage()}");
+            return response()->json(['success' => false, 'message' => 'Error interno del servidor'], 500);
         }
-
-        return response()->json(['success' => true, 'data' => $pokemon]);
     }
 
-    /**
-     * Endpoint API para buscar Pokémon con filtros.
-     */
     public function buscar(Request $request)
     {
         $request->validate([
@@ -248,37 +210,138 @@ class PokemonController extends Controller
             'egg_group' => 'nullable|string',
         ]);
 
-        $term = strtolower(trim($request->input('query', '')));
-        $type = $request->input('type', 'all');
-        $eggGroup = $request->input('egg_group', 'all');
+        $filters = $this->getFilters($request);
+        $term = strtolower(trim($filters['query'] ?? ''));
 
-        $query = Pokemon::query();
-
-        if ($type !== 'all' && !empty($type)) {
-            $query->whereJsonContains('types', $type);
-        }
-
-        if ($eggGroup !== 'all' && !empty($eggGroup)) {
-            $query->whereJsonContains('egg_groups', $eggGroup);
-        }
+        $query = $this->applyFilters(Pokemon::query(), $filters);
 
         if ($term !== '') {
             $query->where(function ($q) use ($term) {
                 if (is_numeric($term)) {
-                    $q->orWhere('pokeapi_id', (int) $term);
+                    $q->orWhere('pokeapi_id', (int)$term);
                 }
-                $q->orWhereRaw('LOWER(name) LIKE ?', ["%$term%"]);
+                $q->orWhereRaw('LOWER(name) LIKE ?', ["%{$term}%"]);
             });
         }
 
-        $query->where('pokeapi_id', '<=', 1025);
-        $results = $query->orderBy('pokeapi_id')->limit(100)->get();
+        $results = $query->where('pokeapi_id', '<=', self::MAX_POKEAPI_ID)
+            ->orderBy('pokeapi_id')
+            ->limit(100)
+            ->get();
 
         return response()->json([
             'success' => true,
-            'data' => $results,
+            'data' => $results->map(fn($p) => $this->formatPokemonData($p)),
             'count' => $results->count(),
         ]);
     }
 
+    private function findPokemon($identifier): Pokemon
+    {
+        return is_numeric($identifier)
+            ? Pokemon::where('pokeapi_id', (int)$identifier)->firstOrFail()
+            : Pokemon::where('name', strtolower($identifier))->firstOrFail();
+    }
+
+    private function getFilters(Request $request): array
+    {
+        return [
+            'type' => $request->input('type', 'all'),
+            'egg_group' => $request->input('egg_group', 'all'),
+            'query' => trim($request->input('query', '')),
+        ];
+    }
+
+    private function applyFilters($query, array $filters)
+    {
+        if (!empty($filters['type']) && $filters['type'] !== 'all') {
+            $query->whereJsonContains('types', $filters['type']);
+        }
+
+        if (!empty($filters['egg_group']) && $filters['egg_group'] !== 'all') {
+            $query->whereJsonContains('egg_groups', $filters['egg_group']);
+        }
+
+        return $query;
+    }
+
+    private function processAbilities(array $abilities): array
+    {
+        return array_map(function ($ability) {
+            if (is_array($ability) && isset($ability['name_es'])) {
+                return $ability;
+            }
+
+            $name = is_array($ability) ? ($ability['name'] ?? null) : $ability;
+
+            return $name
+                ? $this->getAbilityDataFromPokeApi($name)
+                : $this->defaultAbilityData('unknown-ability');
+        }, $abilities);
+    }
+
+    private function getAbilityDataFromPokeApi(string $abilityName): array
+    {
+        $cacheKey = 'ability_' . strtolower($abilityName);
+
+        return Cache::remember($cacheKey, now()->addDays(30), function () use ($abilityName) {
+            try {
+                $response = Http::get("https://pokeapi.co/api/v2/ability/" . strtolower($abilityName));
+
+                if (!$response->successful()) {
+                    Log::warning("Fallo al obtener habilidad: $abilityName - " . $response->status());
+                    return $this->defaultAbilityData($abilityName);
+                }
+
+                $data = $response->json();
+
+                $name_es = collect($data['names'] ?? [])
+                    ->firstWhere('language.name', 'es')['name'] ?? ucwords(str_replace('-', ' ', $abilityName));
+
+                $desc = collect($data['effect_entries'] ?? [])
+                    ->firstWhere('language.name', 'es')['effect']
+                    ?? collect($data['flavor_text_entries'] ?? [])
+                        ->firstWhere('language.name', 'es')['flavor_text']
+                    ?? 'Descripción no disponible.';
+
+                return [
+                    'name' => $abilityName,
+                    'name_es' => $name_es,
+                    'description' => $desc,
+                    'is_hidden' => $data['is_hidden'] ?? false,
+                ];
+            } catch (\Exception $e) {
+                Log::error("Excepción al obtener habilidad: $abilityName - " . $e->getMessage());
+                return $this->defaultAbilityData($abilityName);
+            }
+        });
+    }
+
+    private function defaultAbilityData(string $abilityName): array
+    {
+        return [
+            'name' => $abilityName,
+            'name_es' => ucwords(str_replace('-', ' ', $abilityName)),
+            'description' => 'Descripción no disponible.',
+            'is_hidden' => false,
+        ];
+    }
+
+    private function formatPokemonData(Pokemon $pokemon): array
+    {
+        return [
+            'id' => $pokemon->id,
+            'pokeapi_id' => $pokemon->pokeapi_id,
+            'name' => $pokemon->name,
+            'display_name' => ucwords(str_replace('-', ' ', $pokemon->name)),
+            'description' => $pokemon->description ?? 'Descripción no disponible',
+            'types' => $pokemon->types ?? [],
+            'egg_groups' => $pokemon->egg_groups ?? [],
+            'stats' => $pokemon->stats ?? [],
+            'abilities' => $this->processAbilities($pokemon->abilities ?? []),
+            'image' => $pokemon->image,
+            'height' => $pokemon->height ?? null,
+            'weight' => $pokemon->weight ?? null,
+        ];
+    }
 }

@@ -54,3 +54,11 @@ a:focus {
     text-decoration: underline;
     outline: none;
 }
+
+.text-muted {
+  color: white !important; 
+  text-align: center; 
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}

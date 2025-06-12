@@ -1,9 +1,14 @@
 <footer class="w-100 p-4 text-center mt-8">
     <div class="container mx-auto">
-        <p>&copy; {{ date('Y') }} <span class="author-link" id="authorName">John Castro</span>. Todos los derechos reservados. Última actualización: 10/06/2025</p>
+        <p>&copy; {{ date('Y') }} <span class="author-link" id="authorName">John Castro</span>.
+            Todos los derechos reservados. Última actualización:
+            <time datetime="2025-06-12" title="12 de junio de 2025">12/06/2025</time>
+        </p>
+
+
         <p>Imágenes y contenido de Pokémon &copy; 1995-2023 Nintendo/Game Freak.</p>
     </div>
-    
+
     <!-- Modal Overlay -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="author-modal">
@@ -12,10 +17,10 @@
             <h3>John Castro</h3>
             <p>Desarrollador Web Full Stack</p>
             <div class="social-links">
-                <a href="https://linkedin.com/in/johncastro" target="_blank" title="LinkedIn">
+                <a href="https://linkedin.com/in/johncastrod" target="_blank" title="LinkedIn">
                     <i class="bi bi-linkedin"></i>
                 </a>
-                <a href="https://github.com/johncastro" target="_blank" title="GitHub">
+                <a href="https://github.com/JohnCastro04" target="_blank" title="GitHub">
                     <i class="bi bi-github"></i>
                 </a>
             </div>
@@ -29,7 +34,7 @@
         cursor: pointer;
         font-weight: 600;
     }
-    
+
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -43,7 +48,7 @@
         align-items: center;
         z-index: 9999;
     }
-    
+
     .author-modal {
         background: var(--midnight-abyss);
         border: 2px solid var(--golden-bloom);
@@ -54,7 +59,7 @@
         text-align: center;
         position: relative;
     }
-    
+
     .closebtn {
         position: absolute;
         top: 10px;
@@ -63,7 +68,7 @@
         font-size: 28px;
         text-decoration: none;
     }
-    
+
     .author-image {
         width: 150px;
         height: auto;
@@ -73,23 +78,23 @@
         margin-bottom: 1rem;
         object-fit: cover;
     }
-    
+
     .author-modal h3 {
         color: var(--golden-bloom);
         margin-bottom: 0.5rem;
     }
-    
+
     .author-modal p {
         color: var(--white);
         margin-bottom: 1.5rem;
     }
-    
+
     .social-links {
         display: flex;
         justify-content: center;
         gap: 1rem;
     }
-    
+
     .social-links a {
         display: flex;
         align-items: center;
@@ -102,7 +107,7 @@
         font-size: 1.2rem;
         transition: var(--transition-time);
     }
-    
+
     .social-links a:hover {
         background: var(--golden-bloom);
         color: var(--midnight-abyss);
@@ -114,25 +119,25 @@
         const authorName = document.getElementById('authorName');
         const modalOverlay = document.getElementById('modalOverlay');
         const closeModal = document.getElementById('closeModal');
-        
+
         authorName.addEventListener('click', function() {
             modalOverlay.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         });
-        
+
         function closeModalFunction() {
             modalOverlay.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
-        
+
         closeModal.addEventListener('click', closeModalFunction);
-        
+
         modalOverlay.addEventListener('click', function(e) {
             if (e.target === modalOverlay) {
                 closeModalFunction();
             }
         });
-        
+
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && modalOverlay.style.display === 'flex') {
                 closeModalFunction();
