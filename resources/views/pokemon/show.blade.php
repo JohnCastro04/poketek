@@ -483,20 +483,10 @@
 
 @push('scripts')
 <script>
+    const abilityData = @json($pokemon['abilities']); 
     document.addEventListener('DOMContentLoaded', function() {
         // Inicialización de modales
         const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
-
-        // Mostrar mensajes flash
-        @if(session('status'))
-        showMessage('Éxito', '{{ session('
-            status ') }}', 'success');
-        @endif
-
-        @if(session('error'))
-        showMessage('Error', '{{ session('
-            error ') }}', 'error');
-        @endif
 
         // Animación de barras de estadísticas
         const statBars = document.querySelectorAll('.stat-loading');
@@ -533,7 +523,6 @@
         // Mostrar descripción de habilidades
         const abilityBtns = document.querySelectorAll('.ability-btn');
         const abilityDesc = document.getElementById('ability-description');
-        const abilityData = @json($pokemon['abilities']);
 
         abilityBtns.forEach((btn, idx) => {
             btn.addEventListener('click', () => {
@@ -584,13 +573,6 @@
             });
         });
         @endauth
-
-        // Función auxiliar para mostrar mensajes
-        function showMessage(title, message, type = 'success') {
-            document.getElementById('messageModalLabel').textContent = title;
-            document.getElementById('messageModalBody').innerHTML = `<p>${message}</p>`;
-            messageModal.show();
-        }
     });
 </script>
 @endpush
